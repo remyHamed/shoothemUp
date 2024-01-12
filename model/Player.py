@@ -1,7 +1,5 @@
 import pygame
-import sys
-import model.Environment
-
+from model.Bullet import Bullet
 class Player:
     def __init__(self, env : 'Environment'):
         
@@ -11,3 +9,19 @@ class Player:
         self._position = [env._window_width // 2, env._window_hight // 2]
         self._sprite = pygame.image.load('./assset/player/ship.png')
         self._sprite = pygame.transform.scale(self._sprite, (self._width, self._height))
+        
+    def shoot(self):
+        bullet = Bullet(self._position[0] + 15, self._position[1], -1, 10, 10, self)
+        self._env.addBullet(bullet)
+        
+    def move(self, direction):
+        if direction == 'left':
+            self._position[0] -= 10
+        elif direction == 'right':
+            self._position[0] += 10
+        elif direction == 'up':
+            self._position[1] -= 10
+        elif direction == 'down':
+            self._position[1] += 10
+        else:
+            print('Error: unknown direction')

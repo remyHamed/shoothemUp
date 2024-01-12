@@ -2,9 +2,6 @@ import pygame
 from model.Environment import Environment
 from model.Player import Player
 
-
-pygame.init()
-
 pygame.init()
 
 width = 800
