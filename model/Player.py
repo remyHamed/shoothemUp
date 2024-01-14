@@ -16,12 +16,12 @@ class Player:
         
     def move(self, direction):
         if direction == 'left':
-            self._position[0] -= 10
+            self._position[0] = max(0, self._position[0] - 1)
         elif direction == 'right':
-            self._position[0] += 10
+            self._position[0] = min(self._env._window_width - self._width, self._position[0] + 1)
         elif direction == 'up':
-            self._position[1] -= 10
+            self._position[1] = max(0, self._position[1] - 1)
         elif direction == 'down':
-            self._position[1] += 10
+            self._position[1] = min(self._env._window_hight - self._height, self._position[1] + 1)
         else:
             print('Error: unknown direction')

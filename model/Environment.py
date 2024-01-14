@@ -1,6 +1,7 @@
 import pygame
 from model.Bullet import Bullet
 import sys
+from model.Pad import Pad
 
 class Environment:
     def __init__(self, window_hight, window_width):
@@ -14,6 +15,9 @@ class Environment:
     
     def setPlayer(self, player : 'Player'):
         self._player = player
+    
+    def setPad(self, pad : 'Pad'):
+        self._pad = pad
         
 
     def addBullet(self, bullet : 'Bullet'):
@@ -48,8 +52,8 @@ class Environment:
                 if y_fond >= self._window_hight:
                     y_fond = 0
                 
-                if(a % 30 == 0):
-                    self._player.shoot()
+               # if(a % 30 == 0):
+                #    self._player.shoot()
                     
                 
                 self.moveBullets()
@@ -60,7 +64,7 @@ class Environment:
                 self._window.blit(self._player._sprite, self._player._position)
                 self.drawBullets()   
 
-
+                self._pad.detectInput()
            
                 pygame.display.update()
             a += 1
