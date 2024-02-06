@@ -1,6 +1,7 @@
 import random
 import time
 import pygame
+from Enumerator.Status import Status
 from model import Environment
 from model.Bullet import Bullet
 
@@ -13,6 +14,9 @@ class Ennemy:
         self._position = [env._window_width // 2, env._window_hight // 2]
         self._sprite = pygame.image.load('./assset\enemiSprites\ennemy.png')
         self._sprite = pygame.transform.scale(self._sprite, (self._width, self._height))
+        self.Patern_index = 0
+        self._patern = 1
+        self.status = Status.Stand_by
         
     def shoot(self):
         time.sleep(3);
@@ -101,29 +105,34 @@ class Ennemy:
         return False
 
     def patern_1(self):
+        
+        switcher = {
+            1: self.goDown,
+            2: self.shoot,
+            3: self.goDown,
+            4: self.shoot,
+            5: self.goDown,
+            6: self.shoot,
+            7: self.leave_secreen
+        }
+        
+        switcher.get(self.Patern_index)
+        self.Patern_index += 1
 
-    # 1. Déplacer vers le bas
-        self.goDown()
-    # 2. Tirer*
-        self.shoot()
-    # 3. Répéter 1-2 trois fois
-        for i in range(3):
-            self.goDown()
-            self.shoot()
-        self.leave_secreen()
     
 
         
     def patern_2(self):
-        #1. Déplacer vers le bas
-        self.goDown()
-        #2. Tirer
-        self.shoot()
-        #3. Déplacer vers la gauche*
-        self.goLeft()
-        #4. Tirer
-        self.shoot()
-        #5. Répéter 1-4 deux fois
-        self.goDown()
+        if self.Patern_index < 6:
+            self.Patern_index = 0        
+        switcher = {
+            1: self.goDown,
+            2: self.shoot,
+            3: self.goLeft,
+            4: self.shoot,
+            5: self.goDown,
+            6: self.shoot,
+        }
+
         
             

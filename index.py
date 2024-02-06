@@ -3,6 +3,8 @@ from model.Ennemy import Ennemy
 from model.Environment import Environment
 from model.Player import Player
 from model.Pad import Pad
+from Enumerator.ennemy_patern import Patern
+from model.Wave import Wave
 
 pygame.init()
 
@@ -11,11 +13,19 @@ height = 600
 
 env = Environment(height, width)
 player = Player(env)
-ennemis = [Ennemy(env) for i in range(10)]
+
+wave = Wave(env, 5, Patern.p_1)
+wave_2 = Wave(env, 5, Patern.p_2)
+#wave_3 = Wave(env, 5, Patern(3))
+#wave_4 = Wave(env, 5, Patern(4))
+#wave_5 = Wave(env, 5, Patern(5))
+
+waves = [wave, wave_2, wave_3, wave_4, wave_5]
+
 pad = Pad(player)
 env.setPlayer(player) 
-env.setEnnemis(ennemis)
 env.setPad(pad)
+env.setWave(waves)
 env.run()
 
 

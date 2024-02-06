@@ -1,5 +1,8 @@
+from typing import List
 import pygame
+from Enumerator.Status import Status
 from model import Ennemy, Player
+from model.Wave import Wave
 from model.Bullet import Bullet
 import sys
 from model.Pad import Pad
@@ -13,6 +16,8 @@ class Environment:
         self._background = pygame.image.load('./assset/background/background.png')
         self._background = pygame.transform.scale(self._background, (window_width, window_hight))
         self._bullets = []
+        self._current_wave_index = 0
+        self.current_enemi = []
     
     def setPlayer(self, player : 'Player'):
         self._player = player
@@ -23,6 +28,31 @@ class Environment:
     def setPad(self, pad : 'Pad'):
         self._pad = pad
         
+        
+        
+        
+        
+    
+    def setWave(self, waves: List[Wave]):
+        self._waves = waves
+        self._current_wave = self._waves[self.current_wave_index]
+        
+    def activateWave(self):
+        self._current_wave.activate()
+        
+    def checkWave(self):
+        for ennemi in self._current_wave._ennemy:
+            if ennemi.status == Status.A_live:
+                return
+        self.nextWave()
+    
+    def nextWave(self):
+        self._current_wave_index += 1
+        self._current_wave = self._waves[self._current_wave_index]
+        
+        
+        
+
 
     def addBullet(self, bullet : 'Bullet'):
         self._bullets.append(bullet)
@@ -48,6 +78,7 @@ class Environment:
             for ennemi in self._ennemis:
                 if self.collision(bullet, ennemi):
                     self.removeBullet(bullet)
+                    
                     self._ennemis.remove(ennemi)
                     break
     
@@ -73,9 +104,9 @@ class Environment:
             self._window.blit(self._background, (0, y_fond - self._window_hight))
             self.collisionDetection()
 
-            for ennemi in self._ennemis:
-                ennemi.trajectory()
-                #ennemi.shoot()
+            for ennemi in self._waves[self._current_wave_index]._ennemy:
+                if ennemi.status == Status.A_live:
+                    ennemi.patern_reader(ennemi._patern)
                 self._window.blit(ennemi._sprite, ennemi._position)
 
             self._window.blit(self._player._sprite, self._player._position)
@@ -85,6 +116,7 @@ class Environment:
 
             pygame.display.update()
             clock.tick(target_fps)
+            self.checkWave()
             
             
 
