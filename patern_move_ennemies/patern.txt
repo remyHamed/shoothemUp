@@ -1,0 +1,32 @@
+# Modèle de mouvement pour l'ennemi 1 (Patern.p_1)
+1. Déplacer vers le bas
+2. Tirer
+3. Répéter 1-2 trois fois
+
+# Modèle de mouvement pour l'ennemi 2 (Patern.p_2)
+1. Déplacer vers le bas
+2. Tirer
+3. Déplacer vers la gauche
+4. Tirer
+5. Répéter 1-4 deux fois
+
+# Modèle de mouvement pour l'ennemi 3 (Patern.p_3)
+1. Déplacer vers le bas
+2. Tirer
+3. Déplacer en zigzag vers la gauche et la droite (alternativement)
+4. Tirer
+5. Répéter 1-4 deux fois
+
+# Modèle de mouvement pour l'ennemi 4 (Patern.p_4)
+1. Déplacer vers le bas
+2. Tirer
+3. Faire un cercle autour du joueur
+4. Tirer
+5. Répéter 1-4 une fois
+
+# Modèle de mouvement pour l'ennemi 5 (Patern.p_5)
+1. Déplacer vers le bas
+2. Tirer
+3. Effectuer une série de sauts aléatoires horizontaux et verticaux
+4. Tirer
+5. Répéter 1-4 deux fois

@@ -1,4 +1,5 @@
 import pygame
+from model import Environment
 from model.Bullet import Bullet
 class Player:
     def __init__(self, env : 'Environment'):

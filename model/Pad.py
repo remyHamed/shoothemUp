@@ -1,5 +1,7 @@
 import keyboard
 
+from model import Player
+
 class Pad:
     def __init__(self, player : 'Player'):
         self._player = player
