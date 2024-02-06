@@ -35,7 +35,7 @@ class Environment:
     
     def setWave(self, waves: List[Wave]):
         self._waves = waves
-        self._current_wave = self._waves[self.current_wave_index]
+        self._current_wave = self._waves[self._current_wave_index]
         
     def activateWave(self):
         self._current_wave.activate()
@@ -71,8 +71,11 @@ class Environment:
             self._window.blit(bullet._sprite, (bullet._x, bullet._y))
     
     def collision(self, bullet, ennemi):
-        return bullet._x < ennemi._position[0] + ennemi._sprite.get_width() and bullet._x + bullet._sprite.get_width() > ennemi._position[0] and bullet._y < ennemi._position[1] + ennemi._sprite.get_height() and bullet._y + bullet._sprite.get_height() > ennemi._position[1]
-    
+        if bullet._x > ennemi._position[0] and bullet._x < ennemi._position[0] + ennemi._sprite.get_width():
+            if bullet._y > ennemi._position[1] and bullet._y < ennemi._position[1] + ennemi._sprite.get_height():
+                return True
+        return False
+       
     def collisionDetection(self):
         for bullet in self._bullets:
             for ennemi in self._ennemis:
@@ -87,6 +90,7 @@ class Environment:
         Scrolling_speed = 1
         clock = pygame.time.Clock()
         target_fps = 200 
+        self._current_wave.activate()
         
         running = True
         while running:

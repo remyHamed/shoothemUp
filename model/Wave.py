@@ -1,9 +1,8 @@
-
-
-
 from Enumerator.Status import Status
 from Enumerator.ennemy_patern import Patern
-from model import Ennemy, Environment
+from model import Environment
+from model.Ennemy import Ennemy
+
 
 
 class Wave:
