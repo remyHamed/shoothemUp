@@ -1,3 +1,4 @@
+import time
 import pygame
 from model import Environment
 from model.Bullet import Bullet
@@ -10,10 +11,14 @@ class Player:
         self._position = [env._window_width // 2, env._window_hight // 2]
         self._sprite = pygame.image.load('./assset/player/ship44.png')
         self._sprite = pygame.transform.scale(self._sprite, (self._width, self._height))
+        self.last_shot_time = pygame.time.get_ticks()
         
     def shoot(self):
-        bullet = Bullet(self._position[0] + 15, self._position[1], -1, 10, 10, self)
-        self._env.addBullet(bullet)
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_shot_time >= 500:
+            bullet = Bullet(self._position[0] + 15, self._position[1], -1, 10, 10, self)
+            self._env.addBullet(bullet)
+            self.last_shot_time = current_time
         
     def move(self, direction):
         if direction == 'left':

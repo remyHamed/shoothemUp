@@ -1,3 +1,4 @@
+import pygame
 from model import Environment
 
 

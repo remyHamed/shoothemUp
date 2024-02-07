@@ -15,7 +15,9 @@ class Environment:
         pygame.display.set_caption('Shoot Them Up')
         self._background = pygame.image.load('./assset/background/background.png')
         self._background = pygame.transform.scale(self._background, (window_width, window_hight))
+        
         self._bullets = []
+        self._ennemis_bullets = []
         self._current_wave_index = 0
         self.current_enemi = []
     
@@ -36,6 +38,7 @@ class Environment:
     def setWave(self, waves: List[Wave]):
         self._waves = waves
         self._current_wave = self._waves[self._current_wave_index]
+        self._current_wave.activate()
         
     def activateWave(self):
         self._current_wave.activate()
@@ -49,7 +52,8 @@ class Environment:
     def nextWave(self):
         self._current_wave_index += 1
         self._current_wave = self._waves[self._current_wave_index]
-        
+        self._current_wave.activate()
+        return
         
         
 
@@ -65,9 +69,26 @@ class Environment:
             bullet.move()
             if bullet._y < 0 or bullet._y > self._window_hight:
                 self.removeBullet(bullet)
+                
+                
+    def add_ennemy_bullet(self, bullet : 'Bullet'):
+        self._ennemis_bullets.append(bullet)
+    
+    def remove_ennemy_bullet(self, bullet : 'Bullet'):
+        self._ennemis_bullets.remove(bullet)
+    
+    def move_ennemy_bullets(self):
+        for bullet in self._ennemis_bullets:
+            bullet.move()
+            if bullet._y < 0 or bullet._y > self._window_hight:
+                self.remove_ennemy_bullet(bullet)
     
     def drawBullets(self):
         for bullet in self._bullets:
+            self._window.blit(bullet._sprite, (bullet._x, bullet._y))
+    
+    def draw_ennemy_bullets(self):
+        for bullet in self._ennemis_bullets:
             self._window.blit(bullet._sprite, (bullet._x, bullet._y))
     
     def collision(self, bullet, ennemi):
@@ -78,11 +99,12 @@ class Environment:
        
     def collisionDetection(self):
         for bullet in self._bullets:
-            for ennemi in self._ennemis:
+            for ennemi in self._waves[self._current_wave_index]._ennemy:
                 if self.collision(bullet, ennemi):
                     self.removeBullet(bullet)
-                    
-                    self._ennemis.remove(ennemi)
+                    ennemi.status = Status.Dead
+         
+                    self._waves[self._current_wave_index]._ennemy.remove(ennemi)
                     break
     
     def run(self):
@@ -90,7 +112,6 @@ class Environment:
         Scrolling_speed = 1
         clock = pygame.time.Clock()
         target_fps = 200 
-        self._current_wave.activate()
         
         running = True
         while running:
@@ -103,6 +124,7 @@ class Environment:
                 y_fond = 0
 
             self.moveBullets()
+            self.move_ennemy_bullets()
 
             self._window.blit(self._background, (0, y_fond))
             self._window.blit(self._background, (0, y_fond - self._window_hight))
@@ -111,7 +133,7 @@ class Environment:
             for ennemi in self._waves[self._current_wave_index]._ennemy:
                 if ennemi.status == Status.A_live:
                     ennemi.patern_reader(ennemi._patern)
-                self._window.blit(ennemi._sprite, ennemi._position)
+                    self._window.blit(ennemi._sprite, ennemi._position)
 
             self._window.blit(self._player._sprite, self._player._position)
             self.drawBullets()

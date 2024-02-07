@@ -1,6 +1,6 @@
 from enum import Enum
 
-class Patern(Enum):
+class ennemy_patern(Enum):
     p_1 = 1
     p_2 = 2
     p_3 = 3
