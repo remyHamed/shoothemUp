@@ -124,13 +124,10 @@ class Ennemy:
         match self._patern_index:
             case 1:
                 self.go_down()
-                self.logger.write_log("ennemy log: goDown() 1")
             case 2:
                 self.shoot()
-                self.logger.write_log("ennemy log: shoot() 2")
             case 3:
                 self.go_down()
-                self.logger.write_log("ennemy log: goDown() 3")
             case 4:
                 self.shoot()
             case 5:
@@ -153,11 +150,11 @@ class Ennemy:
             case 2:
                 self.shoot()
             case 3:
-                self.go_down()
+                self.goRight()
             case 4:
                 self.shoot()
             case 5:
-                self.go_down()
+                self.goRight()
             case 6:
                 self.shoot()
             case 7:

@@ -9,7 +9,8 @@ class Ennemis_bullet:
         self._speed = speed
         self._damage = damage
         self._owner = owner
-        self._sprite = pygame.image.load('./assset/bullet/bullet2.png')
+        self._sprite = pygame.image.load('./assset/bullet/v_e.png')
+        self._sprite = pygame.transform.scale(self._sprite, (25, 25))
     
     def move(self):
         
