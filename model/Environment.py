@@ -137,6 +137,7 @@ class Environment:
 
             self._window.blit(self._player._sprite, self._player._position)
             self.drawBullets()
+            self.draw_ennemy_bullets()
 
             self._pad.detectInput()
 
