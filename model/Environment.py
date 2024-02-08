@@ -16,10 +16,13 @@ class Environment:
         self._background = pygame.image.load('./assset/background/background.png')
         self._background = pygame.transform.scale(self._background, (window_width, window_hight))
         
+        self.game_over = False
+        
         self._bullets = []
         self._ennemis_bullets = []
         self._current_wave_index = 0
         self.current_enemi = []
+        
     
     def setPlayer(self, player : 'Player'):
         self._player = player
@@ -77,6 +80,7 @@ class Environment:
     def remove_ennemy_bullet(self, bullet : 'Bullet'):
         self._ennemis_bullets.remove(bullet)
     
+    
     def move_ennemy_bullets(self):
         for bullet in self._ennemis_bullets:
             bullet.move()
@@ -96,6 +100,12 @@ class Environment:
             if bullet._y > ennemi._position[1] and bullet._y < ennemi._position[1] + ennemi._sprite.get_height():
                 return True
         return False
+
+    def collisionPlayer(self, bullet, player):
+        if bullet._x > player._position[0] and bullet._x < player._position[0] + player._sprite.get_width():
+            if bullet._y > player._position[1] and bullet._y < player._position[1] + player._sprite.get_height():
+                return True
+        return False
        
     def collisionDetection(self):
         for bullet in self._bullets:
@@ -103,9 +113,16 @@ class Environment:
                 if self.collision(bullet, ennemi):
                     self.removeBullet(bullet)
                     ennemi.status = Status.Dead
-         
                     self._waves[self._current_wave_index]._ennemy.remove(ennemi)
-                    break
+                    
+                    
+        for bullet in self._ennemis_bullets:
+            if self.collisionPlayer(bullet, self._player):
+                self.remove_ennemy_bullet(bullet)
+                self.game_over = True
+                print("Game Over")
+                return
+        
     
     def run(self):
         y_fond = 0
@@ -122,24 +139,32 @@ class Environment:
             y_fond += Scrolling_speed
             if y_fond >= self._window_hight:
                 y_fond = 0
-
-            self.moveBullets()
-            self.move_ennemy_bullets()
-
+            
             self._window.blit(self._background, (0, y_fond))
             self._window.blit(self._background, (0, y_fond - self._window_hight))
-            self.collisionDetection()
+                
+            if self.game_over == True:
+                
+                sprite_game_over = pygame.image.load('./assset/game_over/g_m.png')
+                sprite_game_over = pygame.transform.scale(sprite_game_over, (300, 300))
+                self._window.blit(sprite_game_over, (340, 280))
+                
+            else:
 
-            for ennemi in self._waves[self._current_wave_index]._ennemy:
-                if ennemi.status == Status.A_live:
-                    ennemi.patern_reader(ennemi._patern)
-                    self._window.blit(ennemi._sprite, ennemi._position)
+                self.moveBullets()
+                self.move_ennemy_bullets()
+                self.collisionDetection()
 
-            self._window.blit(self._player._sprite, self._player._position)
-            self.drawBullets()
-            self.draw_ennemy_bullets()
+                for ennemi in self._waves[self._current_wave_index]._ennemy:
+                    if ennemi.status == Status.A_live:
+                        ennemi.patern_reader(ennemi._patern)
+                        self._window.blit(ennemi._sprite, ennemi._position)
 
-            self._pad.detectInput()
+                self._window.blit(self._player._sprite, self._player._position)
+                self.drawBullets()
+                self.draw_ennemy_bullets()
+
+                self._pad.detectInput()
 
             pygame.display.update()
             clock.tick(target_fps)

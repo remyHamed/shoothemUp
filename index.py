@@ -6,8 +6,8 @@ from model.Environment import Environment
 from model.Wave import Wave
 pygame.init()
 
-width = 800
-height = 1200  
+height = 960  
+width = 1080
 
 env = Environment(height, width)
 player = Player(env)
