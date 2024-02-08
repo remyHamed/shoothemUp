@@ -7,7 +7,7 @@
 
 - **Sous Windows** : 
   ```
-  env\Scripts\activate.bat
+  .\env\Scripts\Activate.ps1
   ```
 
 ## Installez les dépendances :
@@ -16,9 +16,14 @@
 pip install -r requirements.txt
 ```
 
+## mettre à jour le fichier de dépendance :
+
+```
+pip freeze > requirements.txt
+```
+
 ## Exécution du jeu :
 
 ```
 python index.py
-```
 ```
