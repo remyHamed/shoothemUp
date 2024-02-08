@@ -55,13 +55,18 @@ class Environment:
         for ennemi in self._current_wave._ennemy:
             if ennemi.status == Status.A_live:
                 return
+        self._current_wave_index += 1
         self.nextWave()
     
     def nextWave(self):
-        self._current_wave_index += 1
-        self._current_wave = self._waves[self._current_wave_index]
-        self._current_wave.activate()
-        return
+        if(self._current_wave_index >= len(self._waves)):
+            self.game_over = True
+            return
+        else:
+
+            self._current_wave = self._waves[self._current_wave_index]
+            self._current_wave.activate()
+            return
         
         
 
