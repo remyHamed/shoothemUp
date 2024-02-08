@@ -12,6 +12,8 @@ class Player:
         self._sprite = pygame.image.load('./assset/player/ship44.png')
         self._sprite = pygame.transform.scale(self._sprite, (self._width, self._height))
         self.last_shot_time = pygame.time.get_ticks()
+        self._life = 3
+        self._score = 0
         
     def shoot(self):
         current_time = pygame.time.get_ticks()

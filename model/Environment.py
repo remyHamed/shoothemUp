@@ -5,6 +5,7 @@ from Enumerator.ennemy_patern import ennemy_patern
 from model import Ennemy, Player
 from model.Wave import Wave
 from model.Bullet import Bullet
+from model.Combo import Combo
 import sys
 from model.Pad import Pad
 
@@ -17,6 +18,8 @@ class Environment:
         self._background = pygame.image.load('./assset/background/background.png')
         self._background = pygame.transform.scale(self._background, (window_width, window_hight))
         self._running = True
+        
+        self.combo_bonus = 0
         
         self.game_over = False
         
@@ -34,9 +37,9 @@ class Environment:
     
     def setPad(self, pad : 'Pad'):
         self._pad = pad
-        
-        
-        
+    
+    def setCombo(self, combo_bonus : 'Combo'):
+        self.combo_bonus = combo_bonus
         
         
     
@@ -115,6 +118,7 @@ class Environment:
                 if self.collision(bullet, ennemi):
                     self.removeBullet(bullet)
                     ennemi.status = Status.Dead
+                    self._player._score += 10 + self.combo_bonus.kill_update()
                     self._waves[self._current_wave_index]._ennemy.remove(ennemi)
                     
                     
@@ -132,6 +136,10 @@ class Environment:
         self._ennemis_bullets = []
         self._current_wave_index = 0
         self.current_enemi = []
+        self._player._score = 0
+        self._player._life = 3
+        self._player._position = [self._window_width // 2, self._window_hight // 2]
+        self.combo_bonus._index = 0 
         
         wave = Wave(self, 5, ennemy_patern.p_1)
         wave_2 = Wave(self, 5, ennemy_patern.p_2)
@@ -177,6 +185,9 @@ class Environment:
                 
                 sprit_continue_or_quit = pygame.image.load('./assset/game_over/continue_or_quit.png')
                 self._window.blit(sprit_continue_or_quit, (340, 480))
+                
+                print("Game Over")
+                print(self._player._score)
                 
                 self._pad.menu_input()
                 
