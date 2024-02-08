@@ -2,7 +2,8 @@ from typing import List
 import pygame
 from Enumerator.Status import Status
 from Enumerator.ennemy_patern import ennemy_patern
-from model import Ennemy, Player
+from Global.Constants import REWARD_LOOSE, REWRAD_HIT
+from model import Agent, Ennemy
 from model.Wave import Wave
 from model.Bullet import Bullet
 from model.Combo import Combo
@@ -26,11 +27,11 @@ class Environment:
         self._bullets = []
         self._ennemis_bullets = []
         self._current_wave_index = 0
-        self.current_enemi = []
+        self.current_ennemies = []
         
     
-    def setPlayer(self, player : 'Player'):
-        self._player = player
+    def setagent(self, agent : 'Agent'):
+        self._agent = agent
         
     def setEnnemis(self, ennemis : 'Ennemy'):
         self._ennemis = ennemis
@@ -41,8 +42,6 @@ class Environment:
     def setCombo(self, combo_bonus : 'Combo'):
         self.combo_bonus = combo_bonus
         
-        
-    
     def setWave(self, waves: List[Wave]):
         self._waves = waves
         self._current_wave = self._waves[self._current_wave_index]
@@ -68,9 +67,6 @@ class Environment:
             self._current_wave.activate()
             return
         
-        
-
-
     def addBullet(self, bullet : 'Bullet'):
         self._bullets.append(bullet)
     
@@ -82,14 +78,12 @@ class Environment:
             bullet.move()
             if bullet._y < 0 or bullet._y > self._window_hight:
                 self.removeBullet(bullet)
-                
-                
+                          
     def add_ennemy_bullet(self, bullet : 'Bullet'):
         self._ennemis_bullets.append(bullet)
     
     def remove_ennemy_bullet(self, bullet : 'Bullet'):
         self._ennemis_bullets.remove(bullet)
-    
     
     def move_ennemy_bullets(self):
         for bullet in self._ennemis_bullets:
@@ -111,9 +105,9 @@ class Environment:
                 return True
         return False
 
-    def collisionPlayer(self, bullet, player):
-        if bullet._x > player._position[0] and bullet._x < player._position[0] + player._sprite.get_width():
-            if bullet._y > player._position[1] and bullet._y < player._position[1] + player._sprite.get_height():
+    def collision_with_agent(self, bullet, agent):
+        if bullet._x > agent._position[0] and bullet._x < agent._position[0] + agent._sprite.get_width():
+            if bullet._y > agent._position[1] and bullet._y < agent._position[1] + agent._sprite.get_height():
                 return True
         return False
        
@@ -123,27 +117,30 @@ class Environment:
                 if self.collision(bullet, ennemi):
                     self.removeBullet(bullet)
                     ennemi.status = Status.Dead
-                    self._player._score += 10 + self.combo_bonus.kill_update()
+                    self._agent._score += 10 + self.combo_bonus.kill_update()
                     self._waves[self._current_wave_index]._ennemy.remove(ennemi)
-                    
-                    
+                                       
         for bullet in self._ennemis_bullets:
-            if self.collisionPlayer(bullet, self._player):
+            if self.collision_with_agent(bullet, self._agent):
                 self.remove_ennemy_bullet(bullet)
-                self.game_over = True
-                print("Game Over")
+                # TODO Add reward to qtable
+                if (self._agent.does_agent_survives()):
+                    reward = REWRAD_HIT
+                else:
+                    reward = REWARD_LOOSE
+                    self.game_over = True
+                    print("Game Over")
                 return
             
-    def reset(self):
-        
+    def reset(self):    
         self.game_over = False
         self._bullets = []
         self._ennemis_bullets = []
         self._current_wave_index = 0
-        self.current_enemi = []
-        self._player._score = 0
-        self._player._life = 3
-        self._player._position = [self._window_width // 2, self._window_hight // 2]
+        self.current_ennemies = []
+        self._agent._score = 0
+        self._agent._life = 3
+        self._agent._position = [self._window_width // 2, self._window_hight // 2]
         self.combo_bonus._index = 0 
         
         wave = Wave(self, 5, ennemy_patern.p_1)
@@ -158,13 +155,9 @@ class Environment:
                 ennemi.status = Status.Stand_by
                 
         
-        self._player._position = [self._window_width // 2, self._window_hight // 2]
+        self._agent._position = [self._window_width // 2, self._window_hight // 2]
         self._current_wave.activate()
-        
-        
-            
-        
-    
+           
     def run(self):
         y_fond = 0
         Scrolling_speed = 1
@@ -193,7 +186,7 @@ class Environment:
                 self._window.blit(sprit_continue_or_quit, (340, 480))
                 
                 print("Game Over")
-                print(self._player._score)
+                print(self._agent._score)
                 
                 self._pad.menu_input()
                 
@@ -208,11 +201,12 @@ class Environment:
                         ennemi.patern_reader(ennemi._patern)
                         self._window.blit(ennemi._sprite, ennemi._position)
 
-                self._window.blit(self._player._sprite, self._player._position)
+                self._window.blit(self._agent._sprite, self._agent._position)
                 self.drawBullets()
                 self.draw_ennemy_bullets()
 
                 self._pad.detectInput()
+                self._agent.do()
 
             pygame.display.update()
             clock.tick(target_fps)

@@ -1,5 +1,5 @@
 import pygame
-from model.Player import Player
+from model.Agent import Agent
 from model.Pad import Pad
 from Enumerator.ennemy_patern import ennemy_patern
 from model.Environment import Environment
@@ -11,7 +11,7 @@ height = 960
 width = 1080
 
 env = Environment(height, width)
-player = Player(env)
+agent = Agent(env)
 Combo_instance = Combo()
 
 wave = Wave(env, 5, ennemy_patern.p_1)
@@ -22,8 +22,8 @@ wave_3 = Wave(env, 5, ennemy_patern.p_3)
 
 waves = [wave, wave_2, wave_3]
 
-pad = Pad(player)
-env.setPlayer(player) 
+pad = Pad(agent)
+env.setagent(agent) 
 env.setPad(pad)
 env.setWave(waves)
 env.setCombo(Combo_instance)
