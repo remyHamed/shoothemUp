@@ -143,7 +143,8 @@ class Environment:
         
         wave = Wave(self, 5, ennemy_patern.p_1)
         wave_2 = Wave(self, 5, ennemy_patern.p_2)
-        waves = [wave, wave_2]
+        wave_3 = Wave(self, 5, ennemy_patern.p_3)
+        waves = [wave, wave_2, wave_3]
         
         self.setWave(waves)
         

@@ -16,11 +16,11 @@ Combo_instance = Combo()
 
 wave = Wave(env, 5, ennemy_patern.p_1)
 wave_2 = Wave(env, 5, ennemy_patern.p_2)
-wave_3 = Wave(env, 5, ennemy_patern.p_2)
+wave_3 = Wave(env, 5, ennemy_patern.p_3)
 #wave_4 = Wave(env, 5, Patern(4))
 #wave_5 = Wave(env, 5, Patern(5))
 
-waves = [wave, wave_2]
+waves = [wave, wave_2, wave_3]
 
 pad = Pad(player)
 env.setPlayer(player) 

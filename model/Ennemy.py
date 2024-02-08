@@ -119,7 +119,6 @@ class Ennemy:
 
     def patern_1(self):
         
-        
         match self._patern_index:
             case 1:
                 self.go_down()
@@ -162,8 +161,36 @@ class Ennemy:
         self._patern_index += 1
         if self._patern_index == 7:
             self._patern_index = 0
+    
+    def patern_3(self):
         
-        
+        match self._patern_index:
+            case 1:
+                self.goDownLeft()
+                self.shoot()
+            case 2:
+                self.goDownLeft()
+                self.shoot()
+            case 3:
+                self.goDownLeft()
+                self.shoot()
+            case 4:
+                self.goDownLeft()
+                self.shoot()
+            case 5:
+                self.goDownLeft()
+                self.shoot()
+            case 6:
+                self.goDownLeft()
+                self.shoot()
+         
+                
+            
+        self._patern_index += 1
+        if self._patern_index == 7:
+            self._patern_index = 1
+                
+                
 
 
         
