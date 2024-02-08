@@ -62,3 +62,10 @@ Exécution de l'application :
 ```
 python index.py
 ```
+
+Étape 6 : Désactiver l'Environnement Virtuel
+Lorsque vous avez terminé vos travaux dans l'environnement virtuel, vous pouvez le désactiver en utilisant :
+
+```
+deactivate
+```
