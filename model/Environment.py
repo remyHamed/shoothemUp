@@ -1,6 +1,7 @@
 from typing import List
 import pygame
 from Enumerator.Status import Status
+from Enumerator.ennemy_patern import ennemy_patern
 from model import Ennemy, Player
 from model.Wave import Wave
 from model.Bullet import Bullet
@@ -130,14 +131,18 @@ class Environment:
         self._bullets = []
         self._ennemis_bullets = []
         self._current_wave_index = 0
-        self.current_enemi = self._waves[self._current_wave_index]._ennemy
+        self.current_enemi = []
+        
+        wave = Wave(self, 5, ennemy_patern.p_1)
+        wave_2 = Wave(self, 5, ennemy_patern.p_2)
+        waves = [wave, wave_2]
+        
+        self.setWave(waves)
         
         for wave in self._waves:
             for ennemi in wave._ennemy:
                 ennemi.status = Status.Stand_by
                 
-        for ennemi in self._waves[self._current_wave_index]._ennemy:
-            ennemi.status = Status.A_live
         
         self._player._position = [self._window_width // 2, self._window_hight // 2]
         self._current_wave.activate()
