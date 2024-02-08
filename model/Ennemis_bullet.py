@@ -35,24 +35,6 @@ class Ennemis_bullet:
             case Bullet_direction.DOWN_RIGHT:
                 self._x += self._speed
                 self._y += self._speed
-        if self._direction == Bullet_direction.UP:
-            self._y -= self._speed
-        elif self._direction == Bullet_direction.DOWN:
-            self._y += self._speed
-        elif self._direction == Bullet_direction.LEFT:
-            self._x -= self._speed
-        elif self._direction == Bullet_direction.RIGHT:
-            self._x += self._speed
-        elif self._direction == Bullet_direction.UP_LEFT:
-            self._x -= self._speed
-            self._y -= self._speed
-        elif self._direction == Bullet_direction.UP_RIGHT:
-            self._x += self._speed
-            self._y -= self._speed
-        elif self._direction == Bullet_direction.DOWN_LEFT:
-            self._x -= self._speed
-            self._y += self._speed
-        elif self._direction == Bullet_direction.DOWN_RIGHT:
-            self._x += self._speed
-            self._y += self._speed
+            case _: 
+                pass
     

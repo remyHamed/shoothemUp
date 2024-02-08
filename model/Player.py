@@ -31,3 +31,6 @@ class Player:
             self._position[1] = min(self._env._window_hight - self._height, self._position[1] + 1)
         else:
             print('Error: unknown direction')
+            
+    def menu_input(self):
+        pass

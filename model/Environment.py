@@ -15,6 +15,7 @@ class Environment:
         pygame.display.set_caption('Shoot Them Up')
         self._background = pygame.image.load('./assset/background/background.png')
         self._background = pygame.transform.scale(self._background, (window_width, window_hight))
+        self._running = True
         
         self.game_over = False
         
@@ -122,6 +123,27 @@ class Environment:
                 self.game_over = True
                 print("Game Over")
                 return
+            
+    def reset(self):
+        
+        self.game_over = False
+        self._bullets = []
+        self._ennemis_bullets = []
+        self._current_wave_index = 0
+        self.current_enemi = self._waves[self._current_wave_index]._ennemy
+        
+        for wave in self._waves:
+            for ennemi in wave._ennemy:
+                ennemi.status = Status.Stand_by
+                
+        for ennemi in self._waves[self._current_wave_index]._ennemy:
+            ennemi.status = Status.A_live
+        
+        self._player._position = [self._window_width // 2, self._window_hight // 2]
+        self._current_wave.activate()
+        
+        
+            
         
     
     def run(self):
@@ -129,13 +151,12 @@ class Environment:
         Scrolling_speed = 1
         clock = pygame.time.Clock()
         target_fps = 200 
-        
-        running = True
-        while running:
+
+        while self._running:
      
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
-                    running = False
+                    self._running = False
             y_fond += Scrolling_speed
             if y_fond >= self._window_hight:
                 y_fond = 0
@@ -148,6 +169,11 @@ class Environment:
                 sprite_game_over = pygame.image.load('./assset/game_over/g_m.png')
                 sprite_game_over = pygame.transform.scale(sprite_game_over, (300, 300))
                 self._window.blit(sprite_game_over, (340, 280))
+                
+                sprit_continue_or_quit = pygame.image.load('./assset/game_over/continue_or_quit.png')
+                self._window.blit(sprit_continue_or_quit, (340, 480))
+                
+                self._pad.menu_input()
                 
             else:
 

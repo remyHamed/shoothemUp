@@ -119,7 +119,6 @@ class Ennemy:
 
     def patern_1(self):
         
-        self.logger.write_log("ennemy log: patern_1()")
         
         match self._patern_index:
             case 1:
