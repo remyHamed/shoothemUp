@@ -3,6 +3,7 @@ import pygame
 from Enumerator.Bullet_direction import Bullet_direction
 from Enumerator.Status import Status
 from Enumerator.ennemy_patern import ennemy_patern
+from Global.Constants import ENNEMY_BULLET_DIRECTION
 from devtool.Logger import Logger
 from model import Environment
 from model.Ennemis_bullet import Ennemis_bullet
@@ -31,7 +32,7 @@ class Ennemy:
     def shoot(self):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_shot_time >= 3000:
-            bullet = Ennemis_bullet(self._position[0] + 15, self._position[1], Bullet_direction.DOWN, 0.5, 10, self)
+            bullet = Ennemis_bullet(self._position[0] + 15, self._position[1], random.choice(ENNEMY_BULLET_DIRECTION), 2.5, 10, self)
             self._env.add_ennemy_bullet(bullet)
             self.last_shot_time = current_time
         

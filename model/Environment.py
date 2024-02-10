@@ -2,7 +2,7 @@ from typing import List
 import pygame
 from Enumerator.Status import Status
 from Enumerator.ennemy_patern import ennemy_patern
-from Global.Constants import REWARD_LOOSE, REWRAD_HIT
+from Global.Constants import REWARD_LOOSE, REWARD_TAKE_DOWN, REWRAD_HIT
 from model import Agent, Ennemy
 from model.Wave import Wave
 from model.Bullet import Bullet
@@ -119,17 +119,16 @@ class Environment:
                     ennemi.status = Status.Dead
                     self._agent._score += 10 + self.combo_bonus.kill_update()
                     self._waves[self._current_wave_index]._ennemy.remove(ennemi)
+                    self._agent.learning_score += REWARD_TAKE_DOWN
                                        
         for bullet in self._ennemis_bullets:
             if self.collision_with_agent(bullet, self._agent):
                 self.remove_ennemy_bullet(bullet)
-                # TODO Add reward to qtable
                 if (self._agent.does_agent_survives()):
-                    reward = REWRAD_HIT
+                    self._agent.learning_score += REWRAD_HIT
                 else:
-                    reward = REWARD_LOOSE
+                    self._agent.learning_score += REWARD_LOOSE
                     self.game_over = True
-                    print("Game Over")
                 return
             
     def reset(self):    
@@ -184,10 +183,7 @@ class Environment:
                 
                 sprit_continue_or_quit = pygame.image.load('./assset/game_over/continue_or_quit.png')
                 self._window.blit(sprit_continue_or_quit, (340, 480))
-                
-                print("Game Over")
-                print(self._agent._score)
-                
+                                
                 self._pad.menu_input()
                 
             else:

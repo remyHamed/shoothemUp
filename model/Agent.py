@@ -1,6 +1,7 @@
 from random import choice
+import random
 import pygame
-from Global.Constants import MOVES, ACTIONS, REWARD_TAKE_DOWN
+from Global.Constants import ACTIONS, BULLET, EMPTY, ENNEMY, MOVES
 from model import Environment
 from model.Bullet import Bullet
 
@@ -18,10 +19,12 @@ class Agent:
         self._score = 0
 
         self.qtable = {}
+        self.state = self.get_radar()
         self.add_state(self.state)
-        self._learning_score = 0
+        self.learning_score = 0
         self.learning_rate = learning_rate
         self.discount_factor = discount_factor
+        self.noise = 0
         
     def shoot(self):
         current_time = pygame.time.get_ticks()
@@ -52,22 +55,25 @@ class Agent:
     def do(self):
         action = self.best_action()
         
-        if action == 'shoot':
+        if action == 'F':
             self.shoot()
         else:
-            self.move(action)
+            self.learning_score -= 1
+            self.move(MOVES[action])
         
-        new_state, reward = self._env.do(self._position, action)
-        self._learning_score += reward
+        new_state = self.get_radar()
 
         self.add_state(new_state)
         maxQ = max(self.qtable[new_state].values())
-        delta = self._learning_rate * (reward + self.discount_factor * maxQ - self.qtable[self.state][action])
+        delta = self.learning_rate * (self.learning_score + self.discount_factor * maxQ - self.qtable[self.state][action])
         self.qtable[self.state][action] += delta
         self.state = new_state
-
         
     def best_action(self):
+        print(self.arg_max(self.qtable[self.state]))
+        # if (random() < self.noise):
+        #     choice(ACTIONS)
+        # else:
         return self.arg_max(self.qtable[self.state])
 
     def add_state(self, state):
@@ -76,6 +82,42 @@ class Agent:
             for action in ACTIONS:
                 self.qtable[state][action] = 0.0
 
-    def arg_max(table):
+    def arg_max(self, table):
         return max(table, key=table.get)
 
+    def get_radar(self):
+        _radar = []
+        radar_positions = [self.get_radar_unitary_position(0, -100),
+                  self.get_radar_unitary_position(-50, -50),
+                  self.get_radar_unitary_position(-100, 0),
+                  self.get_radar_unitary_position(50, 50),
+                  self.get_radar_unitary_position(100, 0),
+                  self.get_radar_unitary_position(-150, -150),
+                  self.get_radar_unitary_position(-200, -200),
+                  self.get_radar_unitary_position(-250, -250),
+                  self.get_radar_unitary_position(150, 150),
+                  self.get_radar_unitary_position(200, 200),
+                  self.get_radar_unitary_position(250, 250),
+                  self.get_radar_unitary_position(0, -400),
+                  self.get_radar_unitary_position(-50, -350),
+                  self.get_radar_unitary_position(50, -350)]
+        for radar in radar_positions:
+            _radar.append(EMPTY)
+            for ennemy in self._env.current_ennemies:
+                if (self.is_object_in_radar(ennemy, radar)):
+                    _radar.append(ENNEMY)
+            for bullet in self._env._ennemis_bullets:
+                if (self.is_object_in_radar(bullet, radar)):
+                    _radar.append(BULLET)
+        return tuple(_radar)
+    
+    def get_radar_unitary_position(self, x, y):
+        return (self._position[0] + x, self._position[1] + y)
+    
+    def is_object_in_radar(self, object, radar, x_detection=50, y_detection=50):
+        if (object._position[0] > radar[0] - x_detection 
+            & object._position[0] < radar[0] + x_detection
+            & object._position[1] > radar[1] - y_detection
+            & object._position[1] < radar[1] + y_detection):
+            return True
+        return False
