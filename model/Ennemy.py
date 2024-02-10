@@ -31,7 +31,7 @@ class Ennemy:
         
     def shoot(self):
         current_time = pygame.time.get_ticks()
-        if current_time - self.last_shot_time >= 3000:
+        if current_time - self.last_shot_time >= 300:
             bullet = Ennemis_bullet(self._position[0] + 15, self._position[1], random.choice(ENNEMY_BULLET_DIRECTION), 2.5, 10, self)
             self._env.add_ennemy_bullet(bullet)
             self.last_shot_time = current_time

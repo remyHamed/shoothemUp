@@ -1,7 +1,7 @@
 from random import choice
 import random
 import pygame
-from Global.Constants import ACTIONS, BULLET, EMPTY, ENNEMY, MOVES
+from Global.Constants import ACTIONS, BULLET, EMPTY, ENNEMY, MOVES, REWARD_EMPTY_MOVE
 from model import Environment
 from model.Bullet import Bullet
 
@@ -35,13 +35,13 @@ class Agent:
         
     def move(self, direction):
         if direction == 'left':
-            self._position[0] = max(0, self._position[0] - 1)
+            self._position[0] = max(0, self._position[0] - 2)
         elif direction == 'right':
-            self._position[0] = min(self._env._window_width - self._width, self._position[0] + 1)
+            self._position[0] = min(self._env._window_width - self._width, self._position[0] + 2)
         elif direction == 'up':
-            self._position[1] = max(0, self._position[1] - 1)
+            self._position[1] = max(0, self._position[1] - 2)
         elif direction == 'down':
-            self._position[1] = min(self._env._window_hight - self._height, self._position[1] + 1)
+            self._position[1] = min(self._env._window_hight - self._height, self._position[1] + 2)
         else:
             print('Error: unknown direction')
 
@@ -58,7 +58,7 @@ class Agent:
         if action == 'F':
             self.shoot()
         else:
-            self.learning_score -= 1
+            self.learning_score += REWARD_EMPTY_MOVE
             self.move(MOVES[action])
         
         new_state = self.get_radar()

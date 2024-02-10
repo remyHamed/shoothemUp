@@ -2,7 +2,7 @@ from typing import List
 import pygame
 from Enumerator.Status import Status
 from Enumerator.ennemy_patern import ennemy_patern
-from Global.Constants import REWARD_LOOSE, REWARD_TAKE_DOWN, REWRAD_HIT
+from Global.Constants import REWARD_LOOSE, REWARD_NO_COMBO, REWARD_TAKE_DOWN, REWRAD_HIT
 from model import Agent, Ennemy
 from model.Wave import Wave
 from model.Bullet import Bullet
@@ -124,11 +124,11 @@ class Environment:
         for bullet in self._ennemis_bullets:
             if self.collision_with_agent(bullet, self._agent):
                 self.remove_ennemy_bullet(bullet)
-                if (self._agent.does_agent_survives()):
-                    self._agent.learning_score += REWRAD_HIT
-                else:
-                    self._agent.learning_score += REWARD_LOOSE
-                    self.game_over = True
+                # if (self._agent.does_agent_survives()):
+                #     self._agent.learning_score += REWRAD_HIT
+                # else:
+                self._agent.learning_score += REWARD_LOOSE
+                self.game_over = True
                 return
             
     def reset(self):    
@@ -191,6 +191,8 @@ class Environment:
                 self.moveBullets()
                 self.move_ennemy_bullets()
                 self.collisionDetection()
+                if (self.combo_bonus == 0):
+                    self._agent.learning_score += REWARD_NO_COMBO
 
                 for ennemi in self._waves[self._current_wave_index]._ennemy:
                     if ennemi.status == Status.A_live:
