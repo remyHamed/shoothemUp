@@ -1,48 +1,57 @@
-from random import choice
-import random
+from os.path import exists
+import pickle
+from random import random, choice
 import pygame
-from Global.Constants import ACTIONS, BULLET, EMPTY, ENNEMY, MOVES, REWARD_EMPTY_MOVE
+from Global.Constants import ACTIONS, BULLET, EMPTY, ENNEMY, MOVES
 from model import Environment
 from model.Bullet import Bullet
 
 class Agent:
-    def __init__(self, env : 'Environment', learning_rate = 1, discount_factor = 0.5):
+    def __init__(self, env : 'Environment', learning_rate = 0.9, discount_factor = 0.5):
         
         self._height = 50
         self._width = 50
         self._env = env
-        self._position = [env._window_width // 2, env._window_hight // 2]
         self._sprite = pygame.image.load('./assset/player/ship44.png')
         self._sprite = pygame.transform.scale(self._sprite, (self._width, self._height))
+        self._radar_sprite = pygame.image.load('./assset/radar/radar_bg.png').convert_alpha()
         self.last_shot_time = pygame.time.get_ticks()
         self._life = 3
         self._score = 0
         self._speed = 2
+        self.reset()
 
         self.qtable = {}
-        self.state = self.get_radar()
+        self.history = []
         self.add_state(self.state)
-        self.learning_score = 0
         self.learning_rate = learning_rate
         self.discount_factor = discount_factor
         self.noise = 0
+
+    def reset(self):
+        self.position = [self._env._window_width // 2, self._env._window_hight // 2]
+        self.learning_score = 0
+        self.state = self.get_radar()
+
         
     def shoot(self):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_shot_time >= 500:
-            bullet = Bullet(self._position[0] + 15, self._position[1], -1, 10, 10, self)
+            bullet = Bullet(self.position[0] + 15, self.position[1], -1, 10, 10, self)
             self._env.addBullet(bullet)
             self.last_shot_time = current_time
         
     def move(self, direction):
         if direction == 'left':
-            self._position[0] = max(0, self._position[0] - self._speed)
+            self.position[0] = max(0, self.position[0] - self._speed)
         elif direction == 'right':
-            self._position[0] = min(self._env._window_width - self._width, self._position[0] + self._speed)
+            self.position[0] = min(self._env._window_width - self._width, self.position[0] + self._speed)
         elif direction == 'up':
-            self._position[1] = max(0, self._position[1] - self._speed)
+            self.position[1] = max(0, self.position[1] - self._speed)
         elif direction == 'down':
-            self._position[1] = min(self._env._window_hight - self._height, self._position[1] + self._speed)
+            self.position[1] = min(self._env._window_hight - self._height, self.position[1] + self._speed)
+        elif direction == '':
+            self.position = self.position
         else:
             print('Error: unknown direction')
 
@@ -50,16 +59,11 @@ class Agent:
         self._life -= 1
         return self._life > -1
             
-    def menu_input(self):
-        pass
-
     def do(self):
         action = self.best_action()
-        
         if action == 'F':
             self.shoot()
         else:
-            self.learning_score += REWARD_EMPTY_MOVE
             self.move(MOVES[action])
         
         new_state = self.get_radar()
@@ -71,11 +75,10 @@ class Agent:
         self.state = new_state
         
     def best_action(self):
-        print(self.arg_max(self.qtable[self.state]))
-        # if (random() < self.noise):
-        #     choice(ACTIONS)
-        # else:
-        return self.arg_max(self.qtable[self.state])
+        if (random() < self.noise):
+            return choice(ACTIONS)
+        else:
+            return self.arg_max(self.qtable[self.state])
 
     def add_state(self, state):
         if state not in self.qtable:
@@ -90,18 +93,26 @@ class Agent:
         _radar = []
         radar_positions = [self.get_radar_unitary_position(0, -100),
                   self.get_radar_unitary_position(-50, -50),
+                  self.get_radar_unitary_position(50, -50),
                   self.get_radar_unitary_position(-100, 0),
-                  self.get_radar_unitary_position(50, 50),
                   self.get_radar_unitary_position(100, 0),
+
+                  self.get_radar_unitary_position(0, 100),
+                  self.get_radar_unitary_position(-50, 50),
+                  self.get_radar_unitary_position(50, 50),
+
                   self.get_radar_unitary_position(-150, -150),
                   self.get_radar_unitary_position(-200, -200),
                   self.get_radar_unitary_position(-250, -250),
-                  self.get_radar_unitary_position(150, 150),
-                  self.get_radar_unitary_position(200, 200),
-                  self.get_radar_unitary_position(250, 250),
-                  self.get_radar_unitary_position(0, -400),
-                  self.get_radar_unitary_position(-50, -350),
-                  self.get_radar_unitary_position(50, -350)]
+
+                  self.get_radar_unitary_position(150, -150),
+                  self.get_radar_unitary_position(200, -200),
+                  self.get_radar_unitary_position(250, -250),
+
+                  self.get_radar_unitary_position(0, -400)]
+        # for r in radar_positions:
+        #     self._env._window.blit(self._radar_sprite, r)
+    
         for radar in radar_positions:
             _radar.append(EMPTY)
             for ennemy in self._env.current_ennemies:
@@ -113,12 +124,22 @@ class Agent:
         return tuple(_radar)
     
     def get_radar_unitary_position(self, x, y):
-        return (self._position[0] + x, self._position[1] + y)
+        return (self.position[0] + x, self.position[1] + y)
     
     def is_object_in_radar(self, object, radar, x_detection=50, y_detection=50):
-        if (object._position[0] > radar[0] - x_detection 
-            & object._position[0] < radar[0] + x_detection
-            & object._position[1] > radar[1] - y_detection
-            & object._position[1] < radar[1] + y_detection):
+        if (object.position[0] > radar[0] - x_detection 
+            & object.position[0] < radar[0] + x_detection
+            & object.position[1] > radar[1] - y_detection
+            & object.position[1] < radar[1] + y_detection):
             return True
         return False
+    
+    def load(self, filename):
+        if exists(filename):
+            with open(filename, 'rb') as file:
+                self.qtable = pickle.load(file)
+            self.reset()
+        
+    def save(self, filename):
+        with open(filename, 'wb') as file:
+            pickle.dump(self.qtable, file)

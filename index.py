@@ -1,4 +1,5 @@
 import pygame
+from Global.Constants import AGENT_FILE
 from model.Agent import Agent
 from model.Pad import Pad
 from Enumerator.ennemy_patern import ennemy_patern
@@ -21,7 +22,8 @@ wave_3 = Wave(env, 5, ennemy_patern.p_3)
 waves = [wave, wave_2, wave_3]
 
 pad = Pad(agent)
-env.setagent(agent) 
+env.setagent(agent)
+agent.load(AGENT_FILE) 
 env.setPad(pad)
 env.setWave(waves)
 env.setCombo(Combo_instance)

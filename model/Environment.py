@@ -3,13 +3,14 @@ from typing import List
 import pygame
 from Enumerator.Status import Status
 from Enumerator.ennemy_patern import ennemy_patern
-from Global.Constants import REWARD_LOOSE, REWARD_NO_COMBO, REWARD_TAKE_DOWN, REWRAD_HIT
+from Global.Constants import AGENT_FILE, REWARD_CLEAR_WAVE, REWARD_COMBO, REWARD_LOOSE, REWARD_NO_COMBO, REWARD_TAKE_DOWN, REWRAD_HIT
 from model import Agent, Ennemy
 from model.Wave import Wave
 from model.Bullet import Bullet
 from model.Combo import Combo
 import sys
 from model.Pad import Pad
+import matplotlib.pyplot as plt
 
 class Environment:
     def __init__(self, window_hight, window_width):
@@ -101,14 +102,14 @@ class Environment:
             self._window.blit(bullet._sprite, (bullet._x, bullet._y))
     
     def collision(self, bullet, ennemi):
-        if bullet._x > ennemi._position[0] and bullet._x < ennemi._position[0] + ennemi._sprite.get_width():
-            if bullet._y > ennemi._position[1] and bullet._y < ennemi._position[1] + ennemi._sprite.get_height():
+        if bullet._x > ennemi.position[0] and bullet._x < ennemi.position[0] + ennemi._sprite.get_width():
+            if bullet._y > ennemi.position[1] and bullet._y < ennemi.position[1] + ennemi._sprite.get_height():
                 return True
         return False
 
     def collision_with_agent(self, bullet, agent):
-        if bullet._x > agent._position[0] and bullet._x < agent._position[0] + agent._sprite.get_width():
-            if bullet._y > agent._position[1] and bullet._y < agent._position[1] + agent._sprite.get_height():
+        if bullet._x > agent.position[0] and bullet._x < agent.position[0] + agent._sprite.get_width():
+            if bullet._y > agent.position[1] and bullet._y < agent.position[1] + agent._sprite.get_height():
                 return True
         return False
        
@@ -121,6 +122,7 @@ class Environment:
                     self._agent._score += 10 + self.combo_bonus.kill_update()
                     self._waves[self._current_wave_index]._ennemy.remove(ennemi)
                     self._agent.learning_score += REWARD_TAKE_DOWN
+                    print("--------------------TAKE DOWN--------------------")
                                        
         for bullet in self._ennemis_bullets:
             if self.collision_with_agent(bullet, self._agent):
@@ -129,6 +131,8 @@ class Environment:
                 #     self._agent.learning_score += REWRAD_HIT
                 # else:
                 self._agent.learning_score += REWARD_LOOSE
+                print("--------------------LOSE--------------------")
+                self._agent.history.append(self._agent.learning_score)
                 self.game_over = True
                 return
             
@@ -140,7 +144,6 @@ class Environment:
         self.current_ennemies = []
         self._agent._score = 0
         self._agent._life = 3
-        self._agent._position = [self._window_width // 2, self._window_hight // 2]
         self.combo_bonus._index = 0 
         
         wave = Wave(self, 5, ennemy_patern.p_1)
@@ -155,14 +158,14 @@ class Environment:
                 ennemi.status = Status.Stand_by
                 
         
-        self._agent._position = [self._window_width // 2, self._window_hight // 2]
+        self._agent.position = [self._window_width // 2, self._window_hight // 2]
         self._current_wave.activate()
            
     def run(self):
         y_fond = 0
         Scrolling_speed = 1
         clock = pygame.time.Clock()
-        target_fps = 200 
+        target_fps = 20000
 
         while self._running:
      
@@ -172,47 +175,55 @@ class Environment:
             y_fond += Scrolling_speed
             if y_fond >= self._window_hight:
                 y_fond = 0
-            
-            self._window.blit(self._background, (0, y_fond))
-            self._window.blit(self._background, (0, y_fond - self._window_hight))
-                
+#            
+            # self._window.blit(self._background, (0, y_fond))
+            # self._window.blit(self._background, (0, y_fond - self._window_hight))
+#                
             if self.game_over == True:
+#                
+                # sprite_game_over = pygame.image.load('./assset/game_over/g_m.png')
+                # sprite_game_over = pygame.transform.scale(sprite_game_over, (300, 300))
+                # self._window.blit(sprite_game_over, (340, 280))
                 
-                sprite_game_over = pygame.image.load('./assset/game_over/g_m.png')
-                sprite_game_over = pygame.transform.scale(sprite_game_over, (300, 300))
-                self._window.blit(sprite_game_over, (340, 280))
-                
-                sprit_continue_or_quit = pygame.image.load('./assset/game_over/continue_or_quit.png')
-                self._window.blit(sprit_continue_or_quit, (340, 480))
-                                
-                self._pad.menu_input()
+                # sprit_continue_or_quit = pygame.image.load('./assset/game_over/continue_or_quit.png')
+                # self._window.blit(sprit_continue_or_quit, (340, 480))
+#                               
+                # self._pad.menu_input()
+                self._game_over = False
+                self._running = True
+                self._agent.noise *= 1 - 1E-1
+                self.reset()
                 
             else:
-
                 self.moveBullets()
                 self.move_ennemy_bullets()
                 self.collisionDetection()
-                if (self.combo_bonus == 0):
+                if (self.combo_bonus._index > 0):
+                    self._agent.learning_score += REWARD_COMBO
+                if (self.combo_bonus._index == 0):
                     self._agent.learning_score += REWARD_NO_COMBO
-
+                if (len(self._waves[self._current_wave_index]._ennemy) == 0):
+                    self._agent.learning_score += REWARD_CLEAR_WAVE
+                    print("--------------------CLEAR WAVE--------------------")
                 for ennemi in self._waves[self._current_wave_index]._ennemy:
                     if ennemi.status == Status.A_live:
                         ennemi.patern_reader(ennemi._patern)
-                        self._window.blit(ennemi._sprite, ennemi._position)
+#
+                #         self._window.blit(ennemi._sprite, ennemi.position)
 
-                self._window.blit(self._agent._sprite, self._agent._position)
-                self.drawBullets()
-                self.draw_ennemy_bullets()
-
-                self._pad.detectInput()
+                # self._window.blit(self._agent._sprite, self._agent.position)
+                # self.drawBullets()
+                # self.draw_ennemy_bullets()
+#
+                # self._pad.detectInput()
                 self._agent.do()
-
+            
             pygame.display.update()
             clock.tick(target_fps)
             self.checkWave()
             
-            
-
-    
+        plt.plot(self._agent.history)
+        plt.show()
+        self._agent.save(AGENT_FILE)
         pygame.quit()
         sys.exit()

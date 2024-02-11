@@ -5,7 +5,7 @@ class Ennemis_bullet:
     def __init__(self, x, y, direction, speed, damage, owner):
         self._x = x
         self._y = y
-        self._position = (x, y)
+        self.position = (x, y)
         self._direction = direction
         self._speed = speed
         self._damage = damage

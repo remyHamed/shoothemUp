@@ -1,8 +1,9 @@
 from Enumerator.Bullet_direction import Bullet_direction
 
-UP, DOWN, LEFT, RIGHT, FIRE = 'U', 'D', 'L', 'R', 'F'
-ACTIONS = [UP, DOWN, LEFT, RIGHT, FIRE]
-MOVES = {UP : 'up',
+IDLE, UP, DOWN, LEFT, RIGHT, FIRE = 'I', 'U', 'D', 'L', 'R', 'F'
+ACTIONS = [IDLE, UP, DOWN, LEFT, RIGHT, FIRE]
+MOVES = {IDLE: '',
+         UP : 'up',
          DOWN : 'down',
          LEFT : 'left',
          RIGHT : 'right',
@@ -17,11 +18,14 @@ ENNEMY_BULLET_DIRECTION = [Bullet_direction.UP,
                            Bullet_direction.DOWN_LEFT, 
                            Bullet_direction.DOWN_RIGHT]
 
-REWARD_TAKE_DOWN = 10000
-REWARD_LOOSE = -10000
-REWRAD_HIT = -3000
-REWARD_NO_COMBO = -3000
-REWARD_EMPTY_MOVE = -5
+REWARD_TAKE_DOWN = 100
+REWARD_LOOSE = -1000
+REWRAD_HIT = -300
+REWARD_COMBO = 10
+REWARD_NO_COMBO = -10
+REWARD_CLEAR_WAVE = 1000
 EMPTY = "EMPTY"
 ENNEMY = "ENNEMY"
 BULLET = "BULLET"
+
+AGENT_FILE = './agent.qtable'
