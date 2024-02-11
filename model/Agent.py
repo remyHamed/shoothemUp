@@ -17,6 +17,7 @@ class Agent:
         self.last_shot_time = pygame.time.get_ticks()
         self._life = 3
         self._score = 0
+        self._speed = 2
 
         self.qtable = {}
         self.state = self.get_radar()
@@ -35,13 +36,13 @@ class Agent:
         
     def move(self, direction):
         if direction == 'left':
-            self._position[0] = max(0, self._position[0] - 2)
+            self._position[0] = max(0, self._position[0] - self._speed)
         elif direction == 'right':
-            self._position[0] = min(self._env._window_width - self._width, self._position[0] + 2)
+            self._position[0] = min(self._env._window_width - self._width, self._position[0] + self._speed)
         elif direction == 'up':
-            self._position[1] = max(0, self._position[1] - 2)
+            self._position[1] = max(0, self._position[1] - self._speed)
         elif direction == 'down':
-            self._position[1] = min(self._env._window_hight - self._height, self._position[1] + 2)
+            self._position[1] = min(self._env._window_hight - self._height, self._position[1] + self._speed)
         else:
             print('Error: unknown direction')
 

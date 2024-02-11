@@ -1,3 +1,4 @@
+
 from typing import List
 import pygame
 from Enumerator.Status import Status
@@ -14,7 +15,7 @@ class Environment:
     def __init__(self, window_hight, window_width):
         self._window_hight = window_hight
         self._window_width = window_width
-        self._window = pygame.display.set_mode((self._window_hight, self._window_width))
+        self._window = pygame.display.set_mode((self._window_width, self._window_hight))
         pygame.display.set_caption('Shoot Them Up')
         self._background = pygame.image.load('./assset/background/background.png')
         self._background = pygame.transform.scale(self._background, (window_width, window_hight))
