@@ -30,6 +30,7 @@ class Environment:
         self._ennemis_bullets = []
         self._current_wave_index = 0
         self.current_ennemies = []
+        self.iteration = 0
         
     
     def setagent(self, agent : 'Agent'):
@@ -127,13 +128,13 @@ class Environment:
         for bullet in self._ennemis_bullets:
             if self.collision_with_agent(bullet, self._agent):
                 self.remove_ennemy_bullet(bullet)
-                # if (self._agent.does_agent_survives()):
-                #     self._agent.learning_score += REWRAD_HIT
-                # else:
-                self._agent.learning_score += REWARD_LOOSE
-                # print("--------------------LOSE--------------------")
-                self._agent.history.append(self._agent.learning_score)
-                self.game_over = True
+                if (self._agent.does_agent_survives()):
+                    self._agent.learning_score += REWRAD_HIT
+                else:
+                    self._agent.learning_score += REWARD_LOOSE
+                    # print("--------------------LOSE--------------------")
+                    self._agent.history.append(self._agent.learning_score)
+                    self.game_over = True
                 return
             
     def reset(self):    
@@ -168,6 +169,13 @@ class Environment:
         target_fps = 20000
 
         while self._running:
+
+            if (self.iteration == 200):
+                plt.plot(self._agent.history)
+                plt.show()
+                self._agent.save(AGENT_FILE)
+                pygame.quit()
+                sys.exit()
      
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -189,6 +197,7 @@ class Environment:
                 # self._window.blit(sprit_continue_or_quit, (340, 480))
 #                               
                 # self._pad.menu_input()
+                self.iteration += 1
                 self._game_over = False
                 self._running = True
                 self._agent.noise *= 1 - 1E-1
