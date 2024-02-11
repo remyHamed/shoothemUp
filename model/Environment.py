@@ -129,6 +129,7 @@ class Environment:
             if self.collision_with_agent(bullet, self._agent):
                 self.remove_ennemy_bullet(bullet)
                 if (self._agent.does_agent_survives()):
+                    # print("--------------------HIT--------------------")
                     self._agent.learning_score += REWRAD_HIT
                 else:
                     self._agent.learning_score += REWARD_LOOSE
@@ -170,12 +171,12 @@ class Environment:
 
         while self._running:
 
-            if (self.iteration == 200):
-                plt.plot(self._agent.history)
-                plt.show()
-                self._agent.save(AGENT_FILE)
-                pygame.quit()
-                sys.exit()
+            # if (self.iteration == 200):
+            #     plt.plot(self._agent.history)
+            #     plt.show()
+            #     self._agent.save(AGENT_FILE)
+            #     pygame.quit()
+            #     sys.exit()
      
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:

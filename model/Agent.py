@@ -58,7 +58,7 @@ class Agent:
 
     def does_agent_survives(self):
         self._life -= 1
-        return self._life == 0
+        return self._life > 0
             
     def do(self):
         action = self.best_action()

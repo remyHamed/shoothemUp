@@ -18,10 +18,10 @@ ENNEMY_BULLET_DIRECTION = [Bullet_direction.UP,
                            Bullet_direction.DOWN_LEFT, 
                            Bullet_direction.DOWN_RIGHT]
 
-REWARD_TAKE_DOWN = 30
-REWARD_LOOSE = -300
-REWRAD_HIT = -30
-REWARD_COMBO = 10
+REWARD_TAKE_DOWN = 100
+REWARD_LOOSE = -3000
+REWRAD_HIT = -10
+REWARD_COMBO = 1
 REWARD_NO_COMBO = -1
 REWARD_CLEAR_WAVE = 300
 EMPTY = "EMPTY"

@@ -12,7 +12,7 @@ height = 960
 width = 1080
 
 env = Environment(height, width)
-agent = Agent(env, learning_rate=0.5, discount_factor=0.75)
+agent = Agent(env, learning_rate=0.6, discount_factor=0.7)
 Combo_instance = Combo()
 
 wave = Wave(env, 5, ennemy_patern.p_1)
