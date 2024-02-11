@@ -7,7 +7,7 @@ from model import Environment
 from model.Bullet import Bullet
 
 class Agent:
-    def __init__(self, env : 'Environment', learning_rate = 0.9, discount_factor = 0.5):
+    def __init__(self, env : 'Environment', learning_rate = 0.85, discount_factor = 0.55):
         
         self._height = 50
         self._width = 50
@@ -29,6 +29,7 @@ class Agent:
         self.noise = 0
 
     def reset(self):
+        print("loaded")
         self.position = [self._env._window_width // 2, self._env._window_hight // 2]
         self.learning_score = 0
         self.state = self.get_radar()

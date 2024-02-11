@@ -122,7 +122,7 @@ class Environment:
                     self._agent._score += 10 + self.combo_bonus.kill_update()
                     self._waves[self._current_wave_index]._ennemy.remove(ennemi)
                     self._agent.learning_score += REWARD_TAKE_DOWN
-                    print("--------------------TAKE DOWN--------------------")
+                    # print("--------------------TAKE DOWN--------------------")
                                        
         for bullet in self._ennemis_bullets:
             if self.collision_with_agent(bullet, self._agent):
@@ -131,7 +131,7 @@ class Environment:
                 #     self._agent.learning_score += REWRAD_HIT
                 # else:
                 self._agent.learning_score += REWARD_LOOSE
-                print("--------------------LOSE--------------------")
+                # print("--------------------LOSE--------------------")
                 self._agent.history.append(self._agent.learning_score)
                 self.game_over = True
                 return
@@ -204,7 +204,7 @@ class Environment:
                     self._agent.learning_score += REWARD_NO_COMBO
                 if (len(self._waves[self._current_wave_index]._ennemy) == 0):
                     self._agent.learning_score += REWARD_CLEAR_WAVE
-                    print("--------------------CLEAR WAVE--------------------")
+                    # print("--------------------CLEAR WAVE--------------------")
                 for ennemi in self._waves[self._current_wave_index]._ennemy:
                     if ennemi.status == Status.A_live:
                         ennemi.patern_reader(ennemi._patern)
