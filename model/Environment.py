@@ -167,16 +167,16 @@ class Environment:
         y_fond = 0
         Scrolling_speed = 1
         clock = pygame.time.Clock()
-        target_fps = 20000
+        target_fps = 200000
 
         while self._running:
 
-            # if (self.iteration == 200):
-            #     plt.plot(self._agent.history)
-            #     plt.show()
-            #     self._agent.save(AGENT_FILE)
-            #     pygame.quit()
-            #     sys.exit()
+            if (self.iteration == 100):
+                plt.plot(self._agent.history)
+                plt.show()
+                self._agent.save(AGENT_FILE)
+                pygame.quit()
+                sys.exit()
      
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -185,33 +185,34 @@ class Environment:
             if y_fond >= self._window_hight:
                 y_fond = 0
 #            
-            # self._window.blit(self._background, (0, y_fond))
-            # self._window.blit(self._background, (0, y_fond - self._window_hight))
+            self._window.blit(self._background, (0, y_fond))
+            self._window.blit(self._background, (0, y_fond - self._window_hight))
 #                
             if self.game_over == True:
 #                
-                # sprite_game_over = pygame.image.load('./assset/game_over/g_m.png')
-                # sprite_game_over = pygame.transform.scale(sprite_game_over, (300, 300))
-                # self._window.blit(sprite_game_over, (340, 280))
+                sprite_game_over = pygame.image.load('./assset/game_over/g_m.png')
+                sprite_game_over = pygame.transform.scale(sprite_game_over, (300, 300))
+                self._window.blit(sprite_game_over, (340, 280))
                 
-                # sprit_continue_or_quit = pygame.image.load('./assset/game_over/continue_or_quit.png')
-                # self._window.blit(sprit_continue_or_quit, (340, 480))
+                sprit_continue_or_quit = pygame.image.load('./assset/game_over/continue_or_quit.png')
+                self._window.blit(sprit_continue_or_quit, (340, 480))
 #                               
                 # self._pad.menu_input()
                 self.iteration += 1
                 self._game_over = False
                 self._running = True
                 self._agent.noise *= 1 - 1E-1
+                print(self._agent.noise)
                 self.reset()
                 
             else:
                 self.moveBullets()
                 self.move_ennemy_bullets()
                 self.collisionDetection()
-                if (self.combo_bonus._index > 0):
-                    self._agent.learning_score += REWARD_COMBO
-                if (self.combo_bonus._index == 0):
-                    self._agent.learning_score += REWARD_NO_COMBO
+                # if (self.combo_bonus._index > 0):
+                #     self._agent.learning_score += REWARD_COMBO
+                # if (self.combo_bonus._index == 0):
+                #     self._agent.learning_score += REWARD_NO_COMBO
                 if (len(self._waves[self._current_wave_index]._ennemy) == 0):
                     self._agent.learning_score += REWARD_CLEAR_WAVE
                     # print("--------------------CLEAR WAVE--------------------")
@@ -219,13 +220,13 @@ class Environment:
                     if ennemi.status == Status.A_live:
                         ennemi.patern_reader(ennemi._patern)
 #
-                #         self._window.blit(ennemi._sprite, ennemi.position)
+                        self._window.blit(ennemi._sprite, ennemi.position)
 
-                # self._window.blit(self._agent._sprite, self._agent.position)
-                # self.drawBullets()
-                # self.draw_ennemy_bullets()
+                self._window.blit(self._agent._sprite, self._agent.position)
+                self.drawBullets()
+                self.draw_ennemy_bullets()
 #
-                # self._pad.detectInput()
+                self._pad.detectInput()
                 self._agent.do()
             
             pygame.display.update()

@@ -7,17 +7,19 @@ class Pad:
         self._agent = agent
     
     def detectInput(self):
-       
-        if keyboard.is_pressed('left'):
-            self._agent.move('left')
-        elif keyboard.is_pressed('right'):
-            self._agent.move('right')
-        elif keyboard.is_pressed('up'):
-            self._agent.move('up')
-        elif keyboard.is_pressed('down'):
-            self._agent.move('down')
-        elif keyboard.is_pressed('space'):
-            self._agent.shoot()
+       if keyboard.is_pressed('x'):
+           self._agent.noise = 1
+           self._agent.reset()
+        # if keyboard.is_pressed('left'):
+        #     self._agent.move('left')
+        # elif keyboard.is_pressed('right'):
+        #     self._agent.move('right')
+        # elif keyboard.is_pressed('up'):
+        #     self._agent.move('up')
+        # elif keyboard.is_pressed('down'):
+        #     self._agent.move('down')
+        # elif keyboard.is_pressed('space'):
+        #     self._agent.shoot()
     
     def menu_input(self):
         if keyboard.is_pressed('q'):

@@ -29,7 +29,6 @@ class Agent:
         self.noise = 0
 
     def reset(self):
-        print("loaded")
         self.position = [self._env._window_width // 2, self._env._window_hight // 2]
         self.learning_score = 0
         self.state = self.get_radar()
@@ -68,11 +67,9 @@ class Agent:
         else:
             self.move(MOVES[action])
         if (self.position[1] < (self._env._window_hight // 2 -150)):
-            print('im in')
             self.learning_score += REWARD_SELF_BLINDING
-        else:
-            print('im out')
-            self.learning_score += REWARD_GOOD_POSITIONING
+        # else:
+        #     self.learning_score += REWARD_GOOD_POSITIONING
 
         new_state = self.get_radar()
 
