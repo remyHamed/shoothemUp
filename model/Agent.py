@@ -2,7 +2,7 @@ from os.path import exists
 import pickle
 from random import random, choice
 import pygame
-from Global.Constants import ACTIONS, BULLET, EMPTY, ENNEMY, MOVES
+from Global.Constants import ACTIONS, BULLET, EMPTY, ENNEMY, FIRE_REWARD, MOVES, REWARD_GOOD_POSITIONING, REWARD_SELF_BLINDING
 from model import Environment
 from model.Bullet import Bullet
 
@@ -63,10 +63,17 @@ class Agent:
     def do(self):
         action = self.best_action()
         if action == 'F':
+            self.learning_score += FIRE_REWARD
             self.shoot()
         else:
             self.move(MOVES[action])
-        
+        if (self.position[1] < (self._env._window_hight // 2 -150)):
+            print('im in')
+            self.learning_score += REWARD_SELF_BLINDING
+        else:
+            print('im out')
+            self.learning_score += REWARD_GOOD_POSITIONING
+
         new_state = self.get_radar()
 
         self.add_state(new_state)
@@ -102,13 +109,15 @@ class Agent:
                   self.get_radar_unitary_position(-50, 50),
                   self.get_radar_unitary_position(50, 50),
 
-                  self.get_radar_unitary_position(-150, -150),
-                  self.get_radar_unitary_position(-200, -200),
+                  self.get_radar_unitary_position(-175, -175),
                   self.get_radar_unitary_position(-250, -250),
+                  self.get_radar_unitary_position(-325, -325),
+                  self.get_radar_unitary_position(-400, -400),
 
-                  self.get_radar_unitary_position(150, -150),
-                  self.get_radar_unitary_position(200, -200),
+                  self.get_radar_unitary_position(175, -175),
                   self.get_radar_unitary_position(250, -250),
+                  self.get_radar_unitary_position(325, -325),
+                  self.get_radar_unitary_position(400, -400),
 
                   self.get_radar_unitary_position(0, -400)]
         # for r in radar_positions:
