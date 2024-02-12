@@ -184,19 +184,19 @@ class Environment:
             y_fond += Scrolling_speed
             if y_fond >= self._window_hight:
                 y_fond = 0
-#            
+
             self._window.blit(self._background, (0, y_fond))
             self._window.blit(self._background, (0, y_fond - self._window_hight))
-#                
+
             if self.game_over == True:
-#                
+
                 sprite_game_over = pygame.image.load('./assset/game_over/g_m.png')
                 sprite_game_over = pygame.transform.scale(sprite_game_over, (300, 300))
                 self._window.blit(sprite_game_over, (340, 280))
                 
                 sprit_continue_or_quit = pygame.image.load('./assset/game_over/continue_or_quit.png')
                 self._window.blit(sprit_continue_or_quit, (340, 480))
-#                               
+
                 # self._pad.menu_input()
                 self.iteration += 1
                 self._game_over = False
@@ -219,13 +219,13 @@ class Environment:
                 for ennemi in self._waves[self._current_wave_index]._ennemy:
                     if ennemi.status == Status.A_live:
                         ennemi.patern_reader(ennemi._patern)
-#
+
                         self._window.blit(ennemi._sprite, ennemi.position)
 
                 self._window.blit(self._agent._sprite, self._agent.position)
                 self.drawBullets()
                 self.draw_ennemy_bullets()
-#
+
                 self._pad.detectInput()
                 self._agent.do()
             

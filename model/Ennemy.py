@@ -16,8 +16,10 @@ class Ennemy:
         self._height = 50
         self._width = 50
         self._env = env
+
         self.position = [env._window_width // 2, env._window_hight // 2]
-        self._sprite = pygame.image.load('./assset\enemiSprites\ennemy.png')
+        self._sprite = pygame.image.load('./assset/enemiSprites/ennemy.png')
+
         self._sprite = pygame.transform.scale(self._sprite, (self._width, self._height))
         self._patern_index = 0
         self._patern = 1

@@ -62,12 +62,12 @@ class Agent:
     def do(self):
         action = self.best_action()
         if action == 'F':
-            self.learning_score += FIRE_REWARD
+#             self.learning_score += FIRE_REWARD
             self.shoot()
         else:
             self.move(MOVES[action])
-        if (self.position[1] < (self._env._window_hight // 2 -150)):
-            self.learning_score += REWARD_SELF_BLINDING
+#         if (self.position[1] < (self._env._window_hight // 2 -150)):
+#             self.learning_score += REWARD_SELF_BLINDING
         # else:
         #     self.learning_score += REWARD_GOOD_POSITIONING
 
@@ -117,17 +117,17 @@ class Agent:
                   self.get_radar_unitary_position(400, -400),
 
                   self.get_radar_unitary_position(0, -400)]
-        # for r in radar_positions:
-        #     self._env._window.blit(self._radar_sprite, r)
+        for r in radar_positions:
+            self._env._window.blit(self._radar_sprite, r)
     
-        for radar in radar_positions:
+        for index, radar in enumerate(radar_positions):
             _radar.append(EMPTY)
             for ennemy in self._env.current_ennemies:
                 if (self.is_object_in_radar(ennemy, radar)):
-                    _radar.append(ENNEMY)
+                    _radar[index] = ENNEMY
             for bullet in self._env._ennemis_bullets:
                 if (self.is_object_in_radar(bullet, radar)):
-                    _radar.append(BULLET)
+                    _radar[index] = BULLET
         return tuple(_radar)
     
     def get_radar_unitary_position(self, x, y):
