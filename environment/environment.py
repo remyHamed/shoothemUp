@@ -27,19 +27,26 @@ class Environment:
         self.waves[0].step()
         self.ship.random()
         self.update_bullets()
-        self.manage_impacts()
+        if self.is_ship_and_enemy_bullet_impact():
+            self._game_over = True
+            self.reset()
+        if self.is_ship_bullet_and_enemy_impact():
+            print("enemy touched")
 
-    def manage_impacts(self):
+    def is_ship_and_enemy_bullet_impact(self):
         for enemy in self.waves[0].enemies:
             for bullet in enemy.bullets:
                 if self.is_impact(bullet, self._ship):
-                    self._game_over = True
-                    self.reset()
+                    return True
+        return False
+
+    def is_ship_bullet_and_enemy_impact(self):
         for bullet in self._ship.bullets:
             for enemy in self._waves[0].enemies:
                 if self.is_impact(bullet, enemy):
                     self._waves[0].enemies.remove(enemy)
-                    #TODO: manage rewards
+                    return True
+        return False
 
     @property
     def waves(self):
