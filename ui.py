@@ -1,6 +1,7 @@
 import pygame
 
-from constants import BACKGROUND_URL, SCREEN_TITLE, SHIP_SPRITE, ENEMY_SPRITE, SPRITE_SIZE
+from constants import BACKGROUND_URL, SCREEN_TITLE, SHIP_SPRITE, ENEMY_SPRITE, SPRITE_SIZE, ENEMY_BULLET_SPRITE, \
+    BULLET_SPRITE_SIZE
 
 
 def is_running():
@@ -22,6 +23,12 @@ def _ship_sprite():
     return sprite
 
 
+def _enemy_bullet_sprite():
+    sprite = pygame.image.load(ENEMY_BULLET_SPRITE)
+    sprite = pygame.transform.scale(sprite, (BULLET_SPRITE_SIZE, BULLET_SPRITE_SIZE))
+    return sprite
+
+
 class Ui:
     def __init__(self, env):
         self._env = env
@@ -36,13 +43,16 @@ class Ui:
         clock = pygame.time.Clock()
         self.display_env()
         pygame.display.update()
-        clock.tick(200000)
+        clock.tick(30)
 
     def display_env(self):
         self.scroll_background()
         self._window.blit(_ship_sprite(), self._env.ship.position)
         for enemy in self._env.waves[0].enemies:
             self._window.blit(_enemy_sprite(), enemy.position)
+            for bullet in enemy.bullets:
+                self._window.blit(_enemy_bullet_sprite(), bullet.position)
+
         # TODO show bullet
         # TODO show enemy bullet
 

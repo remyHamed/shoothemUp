@@ -14,12 +14,12 @@ class Enemy:
         self.down()
 
     def down(self):
-        self.position[1] += 2
+        self.position[1] += 4
         if self.position[1] > HEIGHT:
             self.position[1] = 0
 
     def shoot(self):
-        bullet = Bullet(self._position[0] + 25, self._position[1], 2.5, randint(1, 8))
+        bullet = Bullet(self._position[0] + 15, self._position[1], 16)
         self._bullets.append(bullet)
 
     @property
@@ -29,3 +29,7 @@ class Enemy:
     @property
     def is_alive(self):
         return self._is_alive
+
+    @property
+    def bullets(self):
+        return self._bullets

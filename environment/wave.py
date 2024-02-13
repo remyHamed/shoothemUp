@@ -1,15 +1,21 @@
+import random
+from enum import Enum
+
 from environment.enemy import Enemy
+
+class EnemyAction(Enum):
+    SHOOT = 0
+    MOVE = 1
 
 
 class Wave:
     def __init__(self, quantity, width):
         self.enemy_spacing = width // (quantity + 1)
         self._enemies = []
-        self._waze_step = 1
+        self._wave_step = 0
         for i in range(quantity):
             enemy = Enemy(self.enemy_spacing * (i + 1), 10)
             self._enemies.append(enemy)
-        print(len(self._enemies))
 
     @property
     def enemies(self):
@@ -19,15 +25,16 @@ class Wave:
         for i in self._enemies:
             i.shoot()
 
-    def _move_all(self):
+    def _move_all_enemies(self):
         for i in self._enemies:
             i.move()
 
     def step(self):
-        match self._waze_step:
-            case 0:
-                self._shoot_all()
-            case 1:
-                self._move_all()
+        my_list = [EnemyAction.SHOOT] * 3 + [EnemyAction.MOVE] * 97
+        choice = random.choice(my_list)
+        if choice == EnemyAction.MOVE:
+            self._move_all_enemies()
+        else:
+            self._shoot_all()
 
 
