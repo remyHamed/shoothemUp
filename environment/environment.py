@@ -1,6 +1,6 @@
 from enum import Enum
 
-from constants import SPRITE_SIZE, SHIP_HIT_REWARD, ENEMY_HIT_REWARD
+from constants import SPRITE_SIZE, SHIP_HIT_REWARD, ENEMY_HIT_REWARD, DEFAULT_REWARD
 from environment.wave import Wave
 from environment.ship import Ship
 
@@ -45,7 +45,7 @@ class Environment:
         self._game_over = False
 
     def do(self, action):
-        _reward = 0.1
+        _reward = DEFAULT_REWARD
         self._iteration += 1
         self.waves[0].step()
         self.ship.do(action)

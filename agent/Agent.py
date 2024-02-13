@@ -22,7 +22,6 @@ class Agent:
         self.add_state(self.state)
         self.history = []
         self.noise = 0
-        # self.noise_counter = 5
 
     def reset(self):
         self._score = 0
@@ -41,9 +40,8 @@ class Agent:
                 self.qtable[state][action] = 0.0
 
     def do(self):
-        # if self._environment.iteration == self.noise_counter * 1000:
-        #     self.noise_counter += 5
-        #     self.noise = 1
+        if self._environment.iteration == 10000:
+            self.noise = 1
         action = self.best_action()
         new_state, reward = self._environment.do(action)
         self._score += reward
