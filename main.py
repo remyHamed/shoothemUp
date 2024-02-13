@@ -1,18 +1,30 @@
 import pygame
 
+from matplotlib import pyplot as plt
+from agent.Agent import Agent
 from environment.environment import Environment
 from ui import Ui
-from constants import WIDTH, HEIGHT
+from constants import WIDTH, HEIGHT, QTABLE
 
 if __name__ == '__main__':
     pygame.init()
 
     env = Environment(WIDTH, HEIGHT)
-    ui = Ui(env)
+    agent = Agent(env)
+    agent.load(QTABLE)
+    #ui = Ui(env)
+    try:
+        while env.running:
+            agent.do()
+            #ui.render()
+    except KeyboardInterrupt:
+        plt.plot(agent.history)
+        plt.show()
+        agent.save(QTABLE)
 
-    while env.running:
-        env.do()
-        ui.render()
+    plt.plot(agent.history)
+    plt.show()
+    agent.save(QTABLE)
 
 
 
