@@ -10,13 +10,13 @@ if __name__ == '__main__':
     pygame.init()
 
     env = Environment(WIDTH, HEIGHT)
-    agent = Agent(env)
+    agent = Agent(env, 0.45, 0.87)
     agent.load(QTABLE)
-    #ui = Ui(env)
+    ui = Ui(env)
     try:
         while env.running:
             agent.do()
-            #ui.render()
+            ui.render()
     except KeyboardInterrupt:
         plt.plot(agent.history)
         plt.show()

@@ -12,10 +12,8 @@ class RadarState(Enum):
 
 
 def is_in_radar(element, radar, x_detection=50, y_detection=50):
-    if (element.position[0] > radar[0] - x_detection
-            & element.position[0] < radar[0] + x_detection
-            & element.position[1] > radar[1] - y_detection
-            & element.position[1] < radar[1] + y_detection):
+    if (radar[0] - x_detection < element.position[0] < radar[0] + x_detection
+            and radar[1] - y_detection < element.position[1] < radar[1] + y_detection):
         return True
     return False
 
@@ -40,9 +38,6 @@ class Environment:
 
         self._iteration = 0
 
-
-
-
     def reset(self):
         self._ship = Ship()
         self._waves = [Wave(5, self._width)]
@@ -50,7 +45,7 @@ class Environment:
         self._game_over = False
 
     def do(self, action):
-        _reward = 0
+        _reward = 0.1
         self._iteration += 1
         self.waves[0].step()
         self.ship.do(action)
@@ -119,6 +114,7 @@ class Environment:
                 for bullet in enemy.bullets:
                     if is_in_radar(bullet, radar):
                         _radar[index] = RadarState.BULLET.value
+
         return tuple(_radar)
 
     def _get_radar_positions(self):

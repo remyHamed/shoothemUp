@@ -10,7 +10,7 @@ def arg_max(table):
 
 
 class Agent:
-    def __init__(self, environment, learning_rate=1, discount_factor=0.9):
+    def __init__(self, environment, learning_rate=0.5, discount_factor=0.5):
         self._score = None
         self.state = None
         self._environment = environment
@@ -22,6 +22,7 @@ class Agent:
         self.add_state(self.state)
         self.history = []
         self.noise = 0
+        # self.noise_counter = 5
 
     def reset(self):
         self._score = 0
@@ -40,6 +41,9 @@ class Agent:
                 self.qtable[state][action] = 0.0
 
     def do(self):
+        # if self._environment.iteration == self.noise_counter * 1000:
+        #     self.noise_counter += 5
+        #     self.noise = 1
         action = self.best_action()
         new_state, reward = self._environment.do(action)
         self._score += reward
