@@ -33,6 +33,15 @@ class Environment:
         if self.is_ship_bullet_and_enemy_impact():
             print("enemy touched")
 
+        if self.is_win_iteration():
+            self._game_over = True
+            self.reset()
+
+    def is_win_iteration(self):
+        if len(self._waves[0].enemies) > 0 and self._game_over is False:
+            return False
+        return True
+
     def is_ship_and_enemy_bullet_impact(self):
         for enemy in self.waves[0].enemies:
             for bullet in enemy.bullets:
