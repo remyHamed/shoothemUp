@@ -32,6 +32,10 @@ def _enemy_bullet_sprite():
 class Ui:
     def __init__(self, env):
         self._env = env
+
+        self._ship_sprite = _ship_sprite()
+        self._enemy_sprite = _enemy_sprite()
+        self._enemy_bullet_sprite = _enemy_bullet_sprite()
         self._window = pygame.display.set_mode((self._env.width, self._env.height))
         pygame.display.set_caption(SCREEN_TITLE)
         self._background = pygame.image.load(BACKGROUND_URL)
@@ -47,11 +51,11 @@ class Ui:
 
     def display_env(self):
         self.scroll_background()
-        self._window.blit(_ship_sprite(), self._env.ship.position)
+        self._window.blit(self._ship_sprite, self._env.ship.position)
         for enemy in self._env.waves[0].enemies:
-            self._window.blit(_enemy_sprite(), enemy.position)
+            self._window.blit(self._enemy_sprite, enemy.position)
             for bullet in enemy.bullets:
-                self._window.blit(_enemy_bullet_sprite(), bullet.position)
+                self._window.blit(self._enemy_bullet_sprite, bullet.position)
 
         # TODO show bullet
         # TODO show enemy bullet

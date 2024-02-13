@@ -3,6 +3,7 @@ from enum import Enum
 
 from environment.enemy import Enemy
 
+
 class EnemyAction(Enum):
     SHOOT = 0
     MOVE = 1
@@ -35,6 +36,5 @@ class Wave:
         if choice == EnemyAction.MOVE:
             self._move_all_enemies()
         else:
+            self._move_all_enemies()
             self._shoot_all()
-
-
