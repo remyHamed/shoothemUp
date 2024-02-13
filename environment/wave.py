@@ -31,7 +31,7 @@ class Wave:
             i.move()
 
     def step(self):
-        my_list = [EnemyAction.SHOOT] * 3 + [EnemyAction.MOVE] * 97
+        my_list = [EnemyAction.SHOOT] * 10 + [EnemyAction.MOVE] * 90
         choice = random.choice(my_list)
         if choice == EnemyAction.MOVE:
             self._move_all_enemies()
