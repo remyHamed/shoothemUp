@@ -1,7 +1,8 @@
+import random
 from random import randint
 
 from constants import HEIGHT
-from environment.bullet import Bullet
+from environment.bullet import Bullet, BulletDirection, BULLET_DIRECTIONS
 
 
 class Enemy:
@@ -19,7 +20,7 @@ class Enemy:
             self.position[1] = 0
 
     def shoot(self):
-        bullet = Bullet(self._position[0] + 15, self._position[1], 16)
+        bullet = Bullet(self._position[0] + 15, self._position[1], 16, random.choice(BULLET_DIRECTIONS))
         self._bullets.append(bullet)
 
     @property

@@ -1,10 +1,19 @@
+import random
+
 from constants import WIDTH, HEIGHT, SPRITE_SIZE
+from environment.bullet import BulletDirection, Bullet
 
 
 class Ship:
     def __init__(self):
         self._speed = 2
         self._position = [WIDTH // 2, HEIGHT // 2]
+        self._bullets = []
+
+    def random(self):
+        directions = ["left", "right", "up", "down"]
+        self.move(random.choice(directions))
+        self.shoot()
 
     def move(self, direction):
         if direction == 'left':
@@ -20,14 +29,14 @@ class Ship:
         else:
             print('Error: unknown direction')
 
+    def shoot(self):
+        bullet = Bullet(self._position[0] + 15, self._position[1], 16, BulletDirection.UP)
+        self._bullets.append(bullet)
+
     @property
     def position(self):
         return self._position
 
     @property
-    def width(self):
-        return self._width
-
-    @property
-    def height(self):
-        return self._height
+    def bullets(self):
+        return self._bullets

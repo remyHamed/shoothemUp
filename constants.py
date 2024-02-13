@@ -8,3 +8,4 @@ ENEMY_BULLET_SPRITE = './assets/bullet/v_e.png'
 SHIP_BULLET_SPRITE = './assets/bullet/bullet2.png'
 SPRITE_SIZE = 50
 BULLET_SPRITE_SIZE = 25
+

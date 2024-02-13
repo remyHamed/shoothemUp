@@ -19,10 +19,8 @@ class Environment:
     def do(self):
         self._iteration += 1
         self.waves[0].step()
+        self.ship.random()
         self.update_bullets()
-        # if self._iteration == 100:
-        #   self._shoot_iteration = 0
-        # self._shoot_iteration += 1
 
     @property
     def waves(self):
@@ -32,11 +30,20 @@ class Environment:
         for enemy in self._waves[0].enemies:
             for bullet in enemy.bullets:
                 bullet.move()
-                if bullet.position[0] > self._width \
-                        or bullet.position[0] < 0 \
-                        or bullet.position[1] > self._height \
-                        or bullet.position[1] < 0:
+                if self.is_bullet_out_of_screen(bullet.position):
                     enemy.bullets.remove(bullet)
+        for bullet in self._ship.bullets:
+            bullet.move()
+            if self.is_bullet_out_of_screen(bullet.position):
+                self._ship.bullets.remove(bullet)
+
+    def is_bullet_out_of_screen(self, bullet_position):
+        if bullet_position[0] > self._width \
+                or bullet_position[0] < 0 \
+                or bullet_position[1] > self._height \
+                or bullet_position[1] < 0:
+            return True
+        return False
 
     @property
     def ship(self):
