@@ -1,6 +1,6 @@
 from enum import Enum
 
-from constants import SPRITE_SIZE, SHIP_HIT_REWARD, ENEMY_HIT_REWARD, DEFAULT_REWARD, BULLET_SPRITE_SIZE
+from constants import SPRITE_SIZE, SHIP_HIT_REWARD, ENEMY_HIT_REWARD, DEFAULT_REWARD, BULLET_SPRITE_SIZE, WIN_REWARD
 from environment.wave import Wave
 from environment.ship import Ship
 
@@ -60,10 +60,11 @@ class Environment:
 
         if self.is_win_iteration():
             self._game_over = True
+            _reward += WIN_REWARD
         return self.get_radar(), _reward
 
     def is_win_iteration(self):
-        if len(self._waves[0].enemies) > 0 and self._game_over is False:
+        if len(self._waves[0].enemies) > 0:
             return False
         return True
 
