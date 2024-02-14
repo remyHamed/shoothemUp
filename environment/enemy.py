@@ -1,8 +1,7 @@
 import random
-from random import randint
 
 from constants import HEIGHT
-from environment.bullet import Bullet, BulletDirection, BULLET_DIRECTIONS
+from environment.bullet import Bullet, BULLET_DIRECTIONS
 
 
 class Enemy:

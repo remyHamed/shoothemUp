@@ -36,7 +36,7 @@ class Ship:
                 pass
 
     def shoot(self):
-        bullet = Bullet(self._position[0] + 15, self._position[1], 16, BulletDirection.UP)
+        bullet = Bullet(self._position[0] + 15, self._position[1], 25, BulletDirection.UP)
         self._bullets.append(bullet)
 
     @property
@@ -46,3 +46,6 @@ class Ship:
     @property
     def bullets(self):
         return self._bullets
+
+    def remove_bullet_on_hit(self, bullet):
+        self.bullets.remove(bullet)

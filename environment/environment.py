@@ -1,6 +1,6 @@
 from enum import Enum
 
-from constants import SPRITE_SIZE, SHIP_HIT_REWARD, ENEMY_HIT_REWARD, DEFAULT_REWARD
+from constants import SPRITE_SIZE, SHIP_HIT_REWARD, ENEMY_HIT_REWARD, DEFAULT_REWARD, BULLET_SPRITE_SIZE
 from environment.wave import Wave
 from environment.ship import Ship
 
@@ -19,9 +19,11 @@ def is_in_radar(element, radar, x_detection=50, y_detection=50):
 
 
 def is_impact(element_1, element_2):
-    if element_2.position[0] < element_1.position[0] < element_2.position[0] + SPRITE_SIZE:
-        if element_2.position[1] < element_1.position[1] < element_2.position[1] + SPRITE_SIZE:
-            return True
+    if ((element_2.position[0] < element_1.position[0] < element_2.position[0] + SPRITE_SIZE
+         or element_1.position[0] < element_2.position[0] < element_1.position[0] + BULLET_SPRITE_SIZE) and
+            (element_2.position[1] < element_1.position[1] < element_2.position[1] + SPRITE_SIZE
+             or element_1.position[1] < element_2.position[1] < element_1.position[1] + BULLET_SPRITE_SIZE)):
+        return True
     return False
 
 
@@ -77,6 +79,7 @@ class Environment:
             for enemy in self._waves[0].enemies:
                 if is_impact(bullet, enemy):
                     self._waves[0].enemies.remove(enemy)
+                    self._ship.remove_bullet_on_hit(bullet)
                     return True
         return False
 

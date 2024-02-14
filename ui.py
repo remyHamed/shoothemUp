@@ -34,10 +34,12 @@ def _ship_bullet_sprite():
     sprite = pygame.transform.scale(sprite, (BULLET_SPRITE_SIZE, BULLET_SPRITE_SIZE))
     return sprite
 
+
 def _radar_sprite():
     sprite = pygame.image.load(RADAR_SPRITE)
     sprite = pygame.transform.scale(sprite, (50, 50))
     return sprite
+
 
 class Ui:
     def __init__(self, env):
@@ -80,7 +82,7 @@ class Ui:
         font = pygame.font.Font('ubuntu', 12)
         text = font.render(self._env.iteration, True, (255, 255, 255))
         rect = text.get_rect()
-        rect.center(50,50)
+        rect.center(50, 50)
         self._window.blit(text, rect)
 
     def _background(self):
