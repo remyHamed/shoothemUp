@@ -4,18 +4,19 @@ from matplotlib import pyplot as plt
 from agent.agent import Agent
 from constants import WIDTH, HEIGHT, QTABLE
 from environment.environment import Environment
+from ui import Ui
 
 if __name__ == '__main__':
     pygame.init()
 
     env = Environment(WIDTH, HEIGHT)
-    agent = Agent(env, 0.1, 0.5)
+    agent = Agent(env, 0.5, 0.8)
     agent.load(QTABLE)
-    # ui = Ui(env)
+    ui = Ui(env)
     try:
         while env.running:
             agent.do()
-            # ui.render()
+            ui.render()
     except KeyboardInterrupt:
         pass
 
