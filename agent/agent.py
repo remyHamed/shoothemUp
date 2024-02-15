@@ -40,8 +40,6 @@ class Agent:
                 self.qtable[state][action] = uniform(-1.0, 1.0)
 
     def do(self):
-        # if self._environment.iteration == 100000:
-        #     self.noise = 1
         action = self.best_action()
         new_state, reward = self._environment.do(action)
         self._score += reward
@@ -52,6 +50,7 @@ class Agent:
         self.qtable[self.state][action] += delta
         self.state = new_state
         if self._environment.game_over:
+            self._environment.increment_iteration()
             self.history.append(self._score)
             self.reset()
             self._environment.reset()
@@ -65,4 +64,3 @@ class Agent:
     def save(self, filename):
         with open(filename, 'wb') as file:
             pickle.dump(self.qtable, file)
-

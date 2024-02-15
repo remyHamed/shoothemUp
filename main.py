@@ -1,16 +1,15 @@
 import pygame
-
 from matplotlib import pyplot as plt
-from agent.Agent import Agent
-from environment.environment import Environment
-from ui import Ui
+
+from agent.agent import Agent
 from constants import WIDTH, HEIGHT, QTABLE
+from environment.environment import Environment
 
 if __name__ == '__main__':
     pygame.init()
 
     env = Environment(WIDTH, HEIGHT)
-    agent = Agent(env, 0.7, 0.6)
+    agent = Agent(env, 0.1, 0.5)
     agent.load(QTABLE)
     # ui = Ui(env)
     try:
@@ -18,15 +17,8 @@ if __name__ == '__main__':
             agent.do()
             # ui.render()
     except KeyboardInterrupt:
-        plt.plot(agent.history)
-        plt.show()
-        agent.save(QTABLE)
+        pass
 
     plt.plot(agent.history)
     plt.show()
     agent.save(QTABLE)
-
-
-
-
-

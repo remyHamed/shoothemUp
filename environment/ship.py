@@ -1,4 +1,3 @@
-import random
 from enum import Enum
 
 from constants import WIDTH, HEIGHT, SPRITE_SIZE
