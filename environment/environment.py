@@ -132,9 +132,9 @@ class Environment:
                 if is_in_radar(enemy, radar):
                     _radar[index] = RadarState.ENEMY.value
         for bullet in self._waves[0].bullets:
-            radar, is_in = is_in_bullet_radar(bullet, self._ship.position)
+            _bullet_radar_index, is_in = is_in_bullet_radar(bullet, self._ship.position)
             if is_in:
-                _bullet_radar[radar] = RadarState.BULLET.value
+                _bullet_radar[_bullet_radar_index] = RadarState.BULLET.value
         return tuple(_radar + _bullet_radar)
 
     def _get_radar_positions(self):

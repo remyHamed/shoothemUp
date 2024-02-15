@@ -68,7 +68,7 @@ class Ui:
         clock = pygame.time.Clock()
         self.display_env()
         pygame.display.update()
-        clock.tick(30)
+        clock.tick(3000)
 
     def display_env(self):
         self.scroll_background()

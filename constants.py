@@ -8,10 +8,10 @@ ENEMY_BULLET_SPRITE = './assets/bullet/v_e.png'
 SHIP_BULLET_SPRITE = './assets/bullet/bullet2.png'
 SPRITE_SIZE = 50
 BULLET_SPRITE_SIZE = 25
-SHIP_HIT_REWARD = -3000
-ENEMY_HIT_REWARD = 1000
+SHIP_HIT_REWARD = -30
+ENEMY_HIT_REWARD = 10
 DEFAULT_REWARD = 0
-WIN_REWARD = 5000
+WIN_REWARD = 500
 
 QTABLE = './agent.qtable'
 RADAR_SPRITE = './assets/radar/radar_bg.png'
