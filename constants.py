@@ -15,3 +15,4 @@ WIN_REWARD = 5000
 
 QTABLE = './agent.qtable'
 RADAR_SPRITE = './assets/radar/radar_bg.png'
+RADAR_BULLETS_SPRITE = './assets/radar/red_circle.png'

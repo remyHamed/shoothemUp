@@ -18,6 +18,20 @@ def is_in_radar(element, radar, x_detection=50, y_detection=50):
     return False
 
 
+def is_in_bullet_radar(bullet, position, radius=200):
+    if (bullet.position[0] - position[0]) ** 2 + (bullet.position[1] - position[1]) ** 2 > radius ** 2:
+        return 0, False
+
+    if bullet.position[0] > position[0] and bullet.position[1] >= position[1]:
+        return 0, True
+    if bullet.position[0] <= position[0] and bullet.position[1] > position[1]:
+        return 1, True
+    if bullet.position[0] < position[0] and bullet.position[1] <= position[1]:
+        return 2, True
+    if bullet.position[0] >= position[0] and bullet.position[1] < position[1]:
+        return 3, True
+
+
 def is_impact(element_1, element_2):
     if ((element_2.position[0] < element_1.position[0] < element_2.position[0] + SPRITE_SIZE
          or element_1.position[0] < element_2.position[0] < element_1.position[0] + BULLET_SPRITE_SIZE) and
@@ -110,29 +124,21 @@ class Environment:
 
     def get_radar(self):
         _radar = []
+        _bullet_radar = [RadarState.EMPTY.value, RadarState.EMPTY.value, RadarState.EMPTY.value, RadarState.EMPTY.value]
 
         for index, radar in enumerate(self._get_radar_positions()):
             _radar.append(RadarState.EMPTY.value)
             for enemy in self._waves[0].enemies:
                 if is_in_radar(enemy, radar):
                     _radar[index] = RadarState.ENEMY.value
-            for bullet in self._waves[0].bullets:
-                if is_in_radar(bullet, radar):
-                    _radar[index] = RadarState.BULLET.value
-        return tuple(_radar)
+        for bullet in self._waves[0].bullets:
+            radar, is_in = is_in_bullet_radar(bullet, self._ship.position)
+            if is_in:
+                _bullet_radar[radar] = RadarState.BULLET.value
+        return tuple(_radar + _bullet_radar)
 
     def _get_radar_positions(self):
         return [
-            self.get_radar_unitary_position(0, -100),
-            self.get_radar_unitary_position(-50, -50),
-            self.get_radar_unitary_position(50, -50),
-            self.get_radar_unitary_position(-100, 0),
-            self.get_radar_unitary_position(100, 0),
-
-            self.get_radar_unitary_position(0, 100),
-            self.get_radar_unitary_position(-50, 50),
-            self.get_radar_unitary_position(50, 50),
-
             self.get_radar_unitary_position(-175, -175),
             self.get_radar_unitary_position(-250, -250),
             self.get_radar_unitary_position(-325, -325),
