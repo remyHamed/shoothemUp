@@ -36,7 +36,7 @@ class Agent:
     def add_state(self, state):
         if state not in self.qtable:
             self.qtable[state] = {}
-            for action in self._actions :
+            for action in self._actions:
                 self.qtable[state][action] = 0.0
 
     def do(self):
@@ -46,10 +46,12 @@ class Agent:
         self.add_state(new_state)
         maxQ = max(self.qtable[new_state].values())
         delta = self._learning_rate * (
-                    reward + self._discount_factor * maxQ - self.qtable[self.state][action])
+                reward + self._discount_factor * maxQ - self.qtable[self.state][action])
         self.qtable[self.state][action] += delta
+        # print("qtable ", self.state, "action: ", action, "value: ", self.qtable[self.state][action])
         self.state = new_state
         if self._environment.game_over:
+            self._environment.increment_iteration()
             self.history.append(self._score)
             self.reset()
             self._environment.reset()
@@ -63,4 +65,3 @@ class Agent:
     def save(self, filename):
         with open(filename, 'wb') as file:
             pickle.dump(self.qtable, file)
-

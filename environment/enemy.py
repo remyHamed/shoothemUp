@@ -20,8 +20,7 @@ class Enemy:
             self.position[1] = 0
 
     def shoot(self):
-        bullet = Bullet(self._position[0] + 15, self._position[1], 16, random.choice(BULLET_DIRECTIONS))
-        self._bullets.append(bullet)
+        return Bullet(self._position[0] + 15, self._position[1], 16, random.choice(BULLET_DIRECTIONS))
 
     @property
     def position(self):

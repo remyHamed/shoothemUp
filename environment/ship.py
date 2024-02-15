@@ -16,7 +16,7 @@ class ShipAction(Enum):
 
 class Ship:
     def __init__(self):
-        self._speed = 2
+        self._speed = 3
         self._position = [WIDTH // 2, HEIGHT // 2]
         self._bullets = []
 

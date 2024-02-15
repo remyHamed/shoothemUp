@@ -67,8 +67,8 @@ class Ui:
         self.display_radar()
         for enemy in self._env.waves[0].enemies:
             self._window.blit(self._enemy_sprite, enemy.position)
-            for bullet in enemy.bullets:
-                self._window.blit(self._enemy_bullet_sprite, bullet.position)
+        for bullet in self._env.waves[0].bullets:
+            self._window.blit(self._enemy_bullet_sprite, bullet.position)
         for bullet in self._env.ship.bullets:
             self._window.blit(self._ship_bullet_sprite, bullet.position)
 
