@@ -12,11 +12,11 @@ if __name__ == '__main__':
     env = Environment(WIDTH, HEIGHT)
     agent = Agent(env, 0.7, 0.6)
     agent.load(QTABLE)
-    ui = Ui(env)
+    # ui = Ui(env)
     try:
         while env.running:
             agent.do()
-            ui.render()
+            # ui.render()
     except KeyboardInterrupt:
         plt.plot(agent.history)
         plt.show()

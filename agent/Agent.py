@@ -1,6 +1,6 @@
 import pickle
 from os.path import exists
-from random import random, choice
+from random import random, choice, uniform
 
 from environment.ship import ShipAction
 
@@ -37,7 +37,7 @@ class Agent:
         if state not in self.qtable:
             self.qtable[state] = {}
             for action in self._actions :
-                self.qtable[state][action] = 0.0
+                self.qtable[state][action] = uniform(-1.0, 1.0)
 
     def do(self):
         # if self._environment.iteration == 100000:
