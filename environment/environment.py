@@ -20,7 +20,7 @@ def is_in_radar(element, radar, x_detection=50, y_detection=50):
 
 def is_in_bullet_radar(bullet, position, radius=200):
     if (bullet.position[0] - position[0]) ** 2 + (bullet.position[1] - position[1]) ** 2 > radius ** 2:
-        return 0, False
+        return -1, False
 
     if bullet.position[0] > position[0] and bullet.position[1] >= position[1]:
         return 0, True
@@ -30,6 +30,8 @@ def is_in_bullet_radar(bullet, position, radius=200):
         return 2, True
     if bullet.position[0] >= position[0] and bullet.position[1] < position[1]:
         return 3, True
+
+    return -1, True
 
 
 def is_impact(element_1, element_2):
@@ -133,7 +135,7 @@ class Environment:
                     _radar[index] = RadarState.ENEMY.value
         for bullet in self._waves[0].bullets:
             _bullet_radar_index, is_in = is_in_bullet_radar(bullet, self._ship.position)
-            if is_in:
+            if is_in and _bullet_radar_index >= 0:
                 _bullet_radar[_bullet_radar_index] = RadarState.BULLET.value
         return tuple(_radar + _bullet_radar)
 
