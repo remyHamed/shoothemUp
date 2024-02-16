@@ -10,7 +10,7 @@ if __name__ == '__main__':
     pygame.init()
 
     env = Environment(WIDTH, HEIGHT)
-    agent = Agent(env, 0.1, 0.6)
+    agent = Agent(env, 0.7, 0.7)
     agent.load(QTABLE)
     ui = Ui(env)
     try:
