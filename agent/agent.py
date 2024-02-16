@@ -1,6 +1,6 @@
 import pickle
 from os.path import exists
-from random import random, choice
+from random import random, choice, uniform
 
 from environment.ship import ShipAction
 
@@ -10,7 +10,7 @@ def arg_max(table):
 
 
 class Agent:
-    def __init__(self, environment, learning_rate=1, discount_factor=0.9):
+    def __init__(self, environment, learning_rate=0.5, discount_factor=0.5):
         self._score = None
         self.state = None
         self._environment = environment
@@ -36,8 +36,8 @@ class Agent:
     def add_state(self, state):
         if state not in self.qtable:
             self.qtable[state] = {}
-            for action in self._actions:
-                self.qtable[state][action] = 0.0
+            for action in self._actions :
+                self.qtable[state][action] = uniform(-1.0, 1.0)
 
     def do(self):
         action = self.best_action()
@@ -46,10 +46,10 @@ class Agent:
         self.add_state(new_state)
         maxQ = max(self.qtable[new_state].values())
         delta = self._learning_rate * (
-                reward + self._discount_factor * maxQ - self.qtable[self.state][action])
+                    reward + self._discount_factor * maxQ - self.qtable[self.state][action])
         self.qtable[self.state][action] += delta
-        # print("qtable ", self.state, "action: ", action, "value: ", self.qtable[self.state][action])
         self.state = new_state
+        # print("qtable ", self.state, "action: ", action, "value: ", self.qtable[self.state][action])
         if self._environment.game_over:
             self._environment.increment_iteration()
             self.history.append(self._score)

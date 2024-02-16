@@ -1,8 +1,8 @@
 from enum import Enum
 
-from constants import SPRITE_SIZE, SHIP_HIT_REWARD, ENEMY_HIT_REWARD
-from environment.wave import Wave
+from constants import SPRITE_SIZE, SHIP_HIT_REWARD, ENEMY_HIT_REWARD, DEFAULT_REWARD, BULLET_SPRITE_SIZE, WIN_REWARD
 from environment.ship import Ship
+from environment.wave import Wave
 
 
 class RadarState(Enum):
@@ -18,10 +18,28 @@ def is_in_radar(element, radar, x_detection=50, y_detection=50):
     return False
 
 
+def is_in_bullet_radar(bullet, position, radius=200):
+    if (bullet.position[0] - position[0]) ** 2 + (bullet.position[1] - position[1]) ** 2 > radius ** 2:
+        return -1, False
+
+    if bullet.position[0] > position[0] and bullet.position[1] >= position[1]:
+        return 0, True
+    if bullet.position[0] <= position[0] and bullet.position[1] > position[1]:
+        return 1, True
+    if bullet.position[0] < position[0] and bullet.position[1] <= position[1]:
+        return 2, True
+    if bullet.position[0] >= position[0] and bullet.position[1] < position[1]:
+        return 3, True
+
+    return -1, True
+
+
 def is_impact(element_1, element_2):
-    if element_2.position[0] < element_1.position[0] < element_2.position[0] + SPRITE_SIZE:
-        if element_2.position[1] < element_1.position[1] < element_2.position[1] + SPRITE_SIZE:
-            return True
+    if ((element_2.position[0] < element_1.position[0] < element_2.position[0] + SPRITE_SIZE
+         or element_1.position[0] < element_2.position[0] < element_1.position[0] + BULLET_SPRITE_SIZE) and
+            (element_2.position[1] < element_1.position[1] < element_2.position[1] + SPRITE_SIZE
+             or element_1.position[1] < element_2.position[1] < element_1.position[1] + BULLET_SPRITE_SIZE)):
+        return True
     return False
 
 
@@ -37,7 +55,6 @@ class Environment:
         self._waves = [Wave(5, self._width)]
 
         self._iteration = 0
-        # self._survive_turn = 0
 
     def reset(self):
         self._ship = Ship()
@@ -46,8 +63,7 @@ class Environment:
         self._game_over = False
 
     def do(self, action):
-        _reward = 0
-        self._iteration += 1
+        _reward = DEFAULT_REWARD
         self.waves[0].step()
         self.ship.do(action)
         self.update_bullets()
@@ -55,15 +71,15 @@ class Environment:
             _reward += SHIP_HIT_REWARD
             self._game_over = True
         if self.is_ship_bullet_and_enemy_impact():
-            #print("reward hit ,",ENEMY_HIT_REWARD // len(self._waves[0].enemies) )
-            _reward += (ENEMY_HIT_REWARD // len(self._waves[0].enemies))
+            _reward += ENEMY_HIT_REWARD
 
         if self.is_win_iteration():
             self._game_over = True
+            _reward += WIN_REWARD
         return self.get_radar(), _reward
 
     def is_win_iteration(self):
-        if len(self._waves[0].enemies) > 0 and self._game_over is False:
+        if len(self._waves[0].enemies) > 0:
             return False
         return True
 
@@ -78,6 +94,7 @@ class Environment:
             for enemy in self._waves[0].enemies:
                 if is_impact(bullet, enemy):
                     self._waves[0].enemies.remove(enemy)
+                    self._ship.remove_bullet_on_hit(bullet)
                     return True
         return False
 
@@ -108,29 +125,21 @@ class Environment:
 
     def get_radar(self):
         _radar = []
+        _bullet_radar = [RadarState.EMPTY.value, RadarState.EMPTY.value, RadarState.EMPTY.value, RadarState.EMPTY.value]
 
         for index, radar in enumerate(self._get_radar_positions()):
             _radar.append(RadarState.EMPTY.value)
             for enemy in self._waves[0].enemies:
                 if is_in_radar(enemy, radar):
                     _radar[index] = RadarState.ENEMY.value
-            for bullet in self._waves[0].bullets:
-                if is_in_radar(bullet, radar):
-                    _radar[index] = RadarState.BULLET.value
-        return tuple(_radar)
+        for bullet in self._waves[0].bullets:
+            _bullet_radar_index, is_in = is_in_bullet_radar(bullet, self._ship.position)
+            if is_in and _bullet_radar_index >= 0:
+                _bullet_radar[_bullet_radar_index] = RadarState.BULLET.value
+        return tuple(_radar + _bullet_radar)
 
     def _get_radar_positions(self):
         return [
-            self.get_radar_unitary_position(0, -100),
-            self.get_radar_unitary_position(-50, -50),
-            self.get_radar_unitary_position(50, -50),
-            self.get_radar_unitary_position(-100, 0),
-            self.get_radar_unitary_position(100, 0),
-
-            self.get_radar_unitary_position(0, 100),
-            self.get_radar_unitary_position(-50, 50),
-            self.get_radar_unitary_position(50, 50),
-
             self.get_radar_unitary_position(-175, -175),
             self.get_radar_unitary_position(-250, -250),
             self.get_radar_unitary_position(-325, -325),

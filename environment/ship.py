@@ -1,4 +1,3 @@
-import random
 from enum import Enum
 
 from constants import WIDTH, HEIGHT, SPRITE_SIZE
@@ -16,7 +15,7 @@ class ShipAction(Enum):
 
 class Ship:
     def __init__(self):
-        self._speed = 3
+        self._speed = 5
         self._position = [WIDTH // 2, HEIGHT // 2]
         self._bullets = []
 
@@ -36,7 +35,7 @@ class Ship:
                 pass
 
     def shoot(self):
-        bullet = Bullet(self._position[0] + 15, self._position[1], 16, BulletDirection.UP)
+        bullet = Bullet(self._position[0] + 15, self._position[1], 25, BulletDirection.UP)
         self._bullets.append(bullet)
 
     @property
@@ -46,3 +45,6 @@ class Ship:
     @property
     def bullets(self):
         return self._bullets
+
+    def remove_bullet_on_hit(self, bullet):
+        self.bullets.remove(bullet)

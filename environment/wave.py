@@ -24,7 +24,7 @@ class Wave:
         return self._enemies
 
     @property
-    def bullets(self,):
+    def bullets(self):
         return self._bullets
 
     def _shoot_all(self):
@@ -37,7 +37,7 @@ class Wave:
             i.move()
 
     def step(self):
-        my_list = [EnemyAction.SHOOT] * 10 + [EnemyAction.MOVE] * 90
+        my_list = [EnemyAction.SHOOT] * 3 + [EnemyAction.MOVE] * 97
         choice = random.choice(my_list)
         if choice == EnemyAction.MOVE:
             self._move_all_enemies()

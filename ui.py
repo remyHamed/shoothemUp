@@ -1,7 +1,7 @@
 import pygame
 
 from constants import BACKGROUND_URL, SCREEN_TITLE, SHIP_SPRITE, ENEMY_SPRITE, SPRITE_SIZE, ENEMY_BULLET_SPRITE, \
-    BULLET_SPRITE_SIZE, SHIP_BULLET_SPRITE, RADAR_SPRITE
+    BULLET_SPRITE_SIZE, SHIP_BULLET_SPRITE, RADAR_SPRITE, RADAR_BULLETS_SPRITE
 
 
 def is_running():
@@ -34,10 +34,18 @@ def _ship_bullet_sprite():
     sprite = pygame.transform.scale(sprite, (BULLET_SPRITE_SIZE, BULLET_SPRITE_SIZE))
     return sprite
 
+
 def _radar_sprite():
     sprite = pygame.image.load(RADAR_SPRITE)
     sprite = pygame.transform.scale(sprite, (50, 50))
     return sprite
+
+
+def _radar_bullets_sprite():
+    sprite = pygame.image.load(RADAR_BULLETS_SPRITE)
+    sprite = pygame.transform.scale(sprite, (200, 200))
+    return sprite
+
 
 class Ui:
     def __init__(self, env):
@@ -48,6 +56,7 @@ class Ui:
         self._enemy_bullet_sprite = _enemy_bullet_sprite()
         self._ship_bullet_sprite = _ship_bullet_sprite()
         self._radar_sprite = _radar_sprite()
+        self._radar_bullets_sprite = _radar_bullets_sprite()
         self._window = pygame.display.set_mode((self._env.width, self._env.height))
         pygame.display.set_caption(SCREEN_TITLE)
         self._background = pygame.image.load(BACKGROUND_URL)
@@ -65,6 +74,7 @@ class Ui:
         self.scroll_background()
         self._window.blit(self._ship_sprite, self._env.ship.position)
         self.display_radar()
+        self.display_iteration_info()
         for enemy in self._env.waves[0].enemies:
             self._window.blit(self._enemy_sprite, enemy.position)
         for bullet in self._env.waves[0].bullets:
@@ -75,13 +85,13 @@ class Ui:
     def display_radar(self):
         for position in self._env.radar_positions:
             self._window.blit(self._radar_sprite, position)
+        self._window.blit(self._radar_bullets_sprite,
+                          (self._env.ship.position[0] - 75, self._env.ship.position[1] - 75))
 
     def display_iteration_info(self):
-        font = pygame.font.Font('ubuntu', 12)
-        text = font.render(self._env.iteration, True, (255, 255, 255))
-        rect = text.get_rect()
-        rect.center(50,50)
-        self._window.blit(text, rect)
+        font = pygame.font.Font('./assets/CaskaydiaCoveNerdFont-Bold.ttf', 32)
+        text = font.render(str(self._env.iteration), False, (255, 0, 0), (0, 0, 0))
+        self._window.blit(text, (100, 100))
 
     def _background(self):
         background = pygame.image.load(BACKGROUND_URL)
