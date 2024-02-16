@@ -49,6 +49,7 @@ class Agent:
                     reward + self._discount_factor * maxQ - self.qtable[self.state][action])
         self.qtable[self.state][action] += delta
         self.state = new_state
+        # print("qtable ", self.state, "action: ", action, "value: ", self.qtable[self.state][action])
         if self._environment.game_over:
             self._environment.increment_iteration()
             self.history.append(self._score)

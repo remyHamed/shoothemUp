@@ -64,7 +64,6 @@ class Environment:
 
     def do(self, action):
         _reward = DEFAULT_REWARD
-        self._iteration += 1
         self.waves[0].step()
         self.ship.do(action)
         self.update_bullets()

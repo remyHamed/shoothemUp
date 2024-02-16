@@ -68,12 +68,13 @@ class Ui:
         clock = pygame.time.Clock()
         self.display_env()
         pygame.display.update()
-        clock.tick(3000)
+        clock.tick(30)
 
     def display_env(self):
         self.scroll_background()
         self._window.blit(self._ship_sprite, self._env.ship.position)
         self.display_radar()
+        self.display_iteration_info()
         for enemy in self._env.waves[0].enemies:
             self._window.blit(self._enemy_sprite, enemy.position)
         for bullet in self._env.waves[0].bullets:
@@ -88,11 +89,9 @@ class Ui:
                           (self._env.ship.position[0] - 75, self._env.ship.position[1] - 75))
 
     def display_iteration_info(self):
-        font = pygame.font.Font('ubuntu', 12)
-        text = font.render(self._env.iteration, True, (255, 255, 255))
-        rect = text.get_rect()
-        rect.center(50, 50)
-        self._window.blit(text, rect)
+        font = pygame.font.Font('./assets/CaskaydiaCoveNerdFont-Bold.ttf', 32)
+        text = font.render(str(self._env.iteration), False, (255, 0, 0), (0, 0, 0))
+        self._window.blit(text, (100, 100))
 
     def _background(self):
         background = pygame.image.load(BACKGROUND_URL)
